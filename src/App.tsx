@@ -79,9 +79,32 @@ function App() {
           ).map((bind: string, i) => (
             <span key={i}>
               <li>{bind}</li>
-              {/* TODO */}
-              <button>remove</button>
-              <button>edit</button>
+              <button onClick={async (e) => {
+                e.preventDefault()
+                if (!api) {
+                  console.error('api not connected')
+                  return
+                }
+                const a = await api.poke({
+                  app: 'blog',
+                  mark: 'blog-action',
+                  json: {
+                    "delete-file": {
+                      "file": bind,
+                }}})
+              }}>remove</button>
+              <button onClick={async (e) => {
+                e.preventDefault()
+                if (!api) {
+                  console.error('api not connected')
+                  return
+                }
+                const res = await api.scry({
+                  app: 'blog',
+                  path: `/md${bind}`
+                })
+                setValue(res)
+              }}>edit</button>
             </span>
         ))}
       </ul>
