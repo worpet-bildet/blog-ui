@@ -6,9 +6,10 @@ import { renderToString } from 'react-dom/server'
 
 function App() {
   const [api, setApi] = useState<Urbit>()
-  const [value, setValue] = useState('# %studio')
+  const [markdown, setMarkdown] = useState('# Start Writing Here\nLorum ipsum')
   const [fileName, setFileName] = useState('')
-  const [bindings, setBindings] = useState([])
+  const [bindings, setBindings] = useState<string[]>([])
+  const [rescry, setRescry] = useState<any>()
 
   useEffect(() => {
     const getApi = async () => {
@@ -30,21 +31,18 @@ function App() {
       setBindings(res)
     }
     getBindings()
-  }, [api])
+  }, [api, rescry])
 
   return (
     <div className='App'>
-      <header className='App-header'>
-        <h1>%studio</h1>
-      </header>
-      <MDEditor height={200} value={value} onChange={setValue as any} />
+      <MDEditor height={200} value={markdown} onChange={setMarkdown as any} />
       <form onSubmit={async (e) => {
         e.preventDefault()
         if (!api) {
           console.error('api not connected')
           return
         }
-        await api.poke({
+        const a = await api.poke({
           app: 'blog',
           mark: 'blog-action',
           json: {
@@ -52,9 +50,10 @@ function App() {
               // NOTE need a leading and trailing slash - also append html for them.
               // Need to get rid of the need for /html at the end on the hoon side later
               "path": fileName,
-              "html": renderToString(<MarkdownPreview source={value}/>),
-              "md": value
+              "html": renderToString(<MarkdownPreview source={markdown}/>),
+              "md": markdown
         }}})
+        setRescry(a)
       }}>
         <label>
           file location
@@ -65,7 +64,9 @@ function App() {
       <ul>
         { bindings.map((bind: string, i) => (
             <span key={i}>
-              <li><a href={`${bind}`}>{bind}</a></li>
+              <li>
+                <a href={`${bind}`} target="_blank" rel="noreferrer">{bind}</a>
+              </li>
               <button onClick={async (e) => {
                 e.preventDefault()
                 if (!api) {
@@ -75,10 +76,9 @@ function App() {
                 const a = await api.poke({
                   app: 'blog',
                   mark: 'blog-action',
-                  json: {
-                    "delete-file": {
-                      "path": bind,
-                }}})
+                  json: { "delete-file": { "path": bind } }
+                })
+                setRescry(a)
               }}>remove</button>
               <button onClick={async (e) => {
                 e.preventDefault()
@@ -90,7 +90,7 @@ function App() {
                   app: 'blog',
                   path: `/md${bind}`
                 })
-                setValue(res)
+                setMarkdown(res)
               }}>edit</button>
             </span>
         ))}
