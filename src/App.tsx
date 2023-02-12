@@ -4,34 +4,55 @@ import MarkdownPreview from '@uiw/react-markdown-preview';
 import { Urbit } from '@urbit/http-api'
 import { renderToString } from 'react-dom/server'
 
+const existingBindings = [
+  '/~debug',
+  '/~/scry',
+  '/~/logout',
+  '/~/login',
+  '/~/channel',
+  '/spider',
+  '/apps',
+  '/.well-known/acme-challenge',
+  '/',
+]
+
 function App() {
   const [api, setApi] = useState<Urbit>()
   const [value, setValue] = useState('# %studio')
+  const [fileName, setFileName] = useState('')
   const [bindings, setBindings] = useState([])
+  const [posts, setPosts] = useState([])
 
   useEffect(() => {
     const getApi = async () => {
-      console.log('awaiting')
       const api = await Urbit.authenticate({
         ship : 'zod',
         url: 'http://localhost:80',
         code: 'lidlut-tabwed-pillex-ridrup',
         verbose: false
       })
-      console.log('finished ', api)
       setApi(api)
     }
     getApi()
   }, [value])
 
-  // useEffect(() => {
-  //   if (!api) return
-  //   const getBindings = async () => {
-  //     let res = await api.scry({app: 'blog', path: '/existing-bindings'})
-  //     setBindings(res)
-  //   }
-  //   getBindings()
-  // }, [api])
+  useEffect(() => {
+    if (!api) return
+    const getPosts = async () => {
+      let res = await api.scry({app: 'blog', path: '/posts'})
+      setPosts(res)
+    }
+    getPosts()
+  }, [api])
+
+  useEffect(() => {
+    if (!api) return
+    const getBindings = async () => {
+      let res = await api.scry({app: 'blog', path: '/existing-bindings'})
+      setBindings(res)
+    }
+    getBindings()
+  }, [api])
 
   return (
     <div className='App'>
@@ -51,17 +72,27 @@ function App() {
           mark: 'blog-action',
           json: {
             "save-file": {
-              "file": "/test",
+              "file": fileName,
               "text": renderToString(<MarkdownPreview source={value}/>)
         }}})
         console.log(a)
       }}>
-        <button type="submit">save</button>
+        <input value={fileName} onChange={e => setFileName(e.target.value)} />
+        <button type="submit">save file</button>
       </form>
       <ul>
-        {bindings.map((bind: string, i) => 
-          <li key={i}>{bind}</li>
+        {posts.map((post : string, i) => 
+          <li key={i}>{post}</li>
         )}
+      </ul>
+      <ul>
+        {
+          bindings.filter(
+            (bind : string) => !existingBindings.includes(bind)
+          ).map((bind: string, i) => 
+            <li key={i}>{bind}</li>
+          )
+        }
       </ul>
     </div>
   );
