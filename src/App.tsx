@@ -21,7 +21,6 @@ function App() {
   const [value, setValue] = useState('# %studio')
   const [fileName, setFileName] = useState('')
   const [bindings, setBindings] = useState([])
-  const [posts, setPosts] = useState([])
 
   useEffect(() => {
     const getApi = async () => {
@@ -35,15 +34,6 @@ function App() {
     }
     getApi()
   }, [value])
-
-  useEffect(() => {
-    if (!api) return
-    const getPosts = async () => {
-      let res = await api.scry({app: 'blog', path: '/posts'})
-      setPosts(res)
-    }
-    getPosts()
-  }, [api])
 
   useEffect(() => {
     if (!api) return
@@ -80,11 +70,6 @@ function App() {
         <input value={fileName} onChange={e => setFileName(e.target.value)} />
         <button type="submit">save file</button>
       </form>
-      <ul>
-        {posts.map((post : string, i) => 
-          <li key={i}>{post}</li>
-        )}
-      </ul>
       <ul>
         {
           bindings.filter(
