@@ -1,12 +1,31 @@
 import { useState, useEffect } from 'react'
 import MDEditor from '@uiw/react-md-editor'
-import MarkdownPreview from '@uiw/react-markdown-preview';
+import MarkdownPreview from '@uiw/react-markdown-preview'
 import { Urbit } from '@urbit/http-api'
 import { renderToString } from 'react-dom/server'
+//
+import { Button } from 'react-bootstrap'
+import Form from 'react-bootstrap/Form'
+import ListGroup from 'react-bootstrap/ListGroup'
+import Row from 'react-bootstrap/Row'
+import Col from 'react-bootstrap/Col'
+
+const defaultString =
+`# Start Writing Here
+
+Use markdown to write a file
+
+Use style tags to customize the layout
+
+<style>
+  h1 {
+    color : red;
+  }
+</style>`
 
 function App() {
   const [api, setApi] = useState<Urbit>()
-  const [markdown, setMarkdown] = useState('# Start Writing Here\nLorum ipsum')
+  const [markdown, setMarkdown] = useState(defaultString)
   const [fileName, setFileName] = useState('')
   const [bindings, setBindings] = useState<string[]>([])
   const [rescry, setRescry] = useState<any>()
@@ -34,68 +53,73 @@ function App() {
   }, [api, rescry])
 
   return (
-    <div className='App'>
-      <MDEditor height={200} value={markdown} onChange={setMarkdown as any} />
-      <form onSubmit={async (e) => {
-        e.preventDefault()
-        if (!api) {
-          console.error('api not connected')
-          return
-        }
-        const a = await api.poke({
-          app: 'blog',
-          mark: 'blog-action',
-          json: {
-            "save-file": {
-              // NOTE need a leading and trailing slash - also append html for them.
-              // Need to get rid of the need for /html at the end on the hoon side later
-              "path": fileName,
-              "html": renderToString(<MarkdownPreview source={markdown}/>),
-              "md": markdown
-        }}})
-        setRescry(a)
-      }}>
-        <label>
-          file location
-          <input value={fileName} onChange={e => setFileName(e.target.value)}/>
-        </label>
-        <button type="submit">save file</button>
-      </form>
-      <ul>
-        { bindings.map((bind: string, i) => (
-            <span key={i}>
-              <li>
+    <Row>
+      <Col lg={9}>
+        <MDEditor height={730} value={markdown} onChange={setMarkdown as any}/>
+      </Col>
+      <Col>
+        <Form onSubmit={async (e) => {
+          e.preventDefault()
+          if (!api) {
+            console.error('api not connected')
+            return
+          }
+          const a = await api.poke({
+            app: 'blog',
+            mark: 'blog-action',
+            json: {
+              "save-file": {
+                // NOTE need a leading slash
+                "path": fileName,
+                "html": renderToString(<MarkdownPreview source={markdown}/>),
+                "md": markdown
+          }}})
+          setRescry(a)
+        }}>
+          <Form.Group className="mb-3">
+            <Form.Label>file location</Form.Label>
+            <Form.Control value={fileName} onChange={e => setFileName(e.target.value)}/>
+            <Form.Text className="text-muted">
+                your file will automatically be bound to this location
+            </Form.Text>
+          </Form.Group>
+          <Button type="submit">Save File</Button>
+        </Form>
+        <ListGroup as="ul">
+          { bindings.map((bind: string, i) => (
+              <ListGroup.Item as="li" key={i} active={fileName == bind}>
                 <a href={`${bind}`} target="_blank" rel="noreferrer">{bind}</a>
-              </li>
-              <button onClick={async (e) => {
-                e.preventDefault()
-                if (!api) {
-                  console.error('api not connected')
-                  return
-                }
-                const a = await api.poke({
-                  app: 'blog',
-                  mark: 'blog-action',
-                  json: { "delete-file": { "path": bind } }
-                })
-                setRescry(a)
-              }}>remove</button>
-              <button onClick={async (e) => {
-                e.preventDefault()
-                if (!api) {
-                  console.error('api not connected')
-                  return
-                }
-                const res = await api.scry({
-                  app: 'blog',
-                  path: `/md${bind}`
-                })
-                setMarkdown(res)
-              }}>edit</button>
-            </span>
-        ))}
-      </ul>
-    </div>
+                <Button onClick={async (e) => {
+                  e.preventDefault()
+                  if (!api) {
+                    console.error('api not connected')
+                    return
+                  }
+                  const a = await api.poke({
+                    app: 'blog',
+                    mark: 'blog-action',
+                    json: { "delete-file": { "path": bind } }
+                  })
+                  setRescry(a)
+                }}>remove</Button>
+                <Button onClick={async (e) => {
+                  e.preventDefault()
+                  if (!api) {
+                    console.error('api not connected')
+                    return
+                  }
+                  const res = await api.scry({
+                    app: 'blog',
+                    path: `/md${bind}`
+                  })
+                  setFileName(bind)
+                  setMarkdown(res)
+                }}>edit</Button>
+              </ListGroup.Item>
+          ))}
+        </ListGroup>
+      </Col>
+    </Row>
   );
 }
 
