@@ -33,12 +33,12 @@ function App() {
       setApi(api)
     }
     getApi()
-  }, [value])
+  }, [])
 
   useEffect(() => {
     if (!api) return
     const getBindings = async () => {
-      let res = await api.scry({app: 'blog', path: '/existing-bindings'})
+      let res = await api.scry({app: 'blog', path: '/pages'})
       setBindings(res)
     }
     getBindings()
@@ -63,8 +63,9 @@ function App() {
             "save-file": {
               // NOTE need a leading and trailing slash - also append html for them.
               // Need to get rid of the need for /html at the end on the hoon side later
-              "file": fileName,
-              "text": renderToString(<MarkdownPreview source={value}/>)
+              "path": fileName,
+              "html": renderToString(<MarkdownPreview source={value}/>),
+              "md": value
         }}})
       }}>
         <label>
@@ -78,7 +79,7 @@ function App() {
             (bind : string) => !existingBindings.includes(bind)
           ).map((bind: string, i) => (
             <span key={i}>
-              <li>{bind}</li>
+              <li><a href={`${bind}`}>{bind}</a></li>
               <button onClick={async (e) => {
                 e.preventDefault()
                 if (!api) {
@@ -90,7 +91,7 @@ function App() {
                   mark: 'blog-action',
                   json: {
                     "delete-file": {
-                      "file": bind,
+                      "path": bind,
                 }}})
               }}>remove</button>
               <button onClick={async (e) => {
