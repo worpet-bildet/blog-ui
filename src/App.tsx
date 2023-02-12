@@ -56,28 +56,34 @@ function App() {
           console.error('api not connected')
           return
         }
-        console.log('blog')
-        const a = await api.poke({
+        await api.poke({
           app: 'blog',
           mark: 'blog-action',
           json: {
             "save-file": {
+              // NOTE need a leading and trailing slash - also append html for them.
+              // Need to get rid of the need for /html at the end on the hoon side later
               "file": fileName,
               "text": renderToString(<MarkdownPreview source={value}/>)
         }}})
-        console.log(a)
       }}>
-        <input value={fileName} onChange={e => setFileName(e.target.value)} />
+        <label>
+          file location
+          <input value={fileName} onChange={e => setFileName(e.target.value)}/>
+        </label>
         <button type="submit">save file</button>
       </form>
       <ul>
-        {
-          bindings.filter(
+        { bindings.filter(
             (bind : string) => !existingBindings.includes(bind)
-          ).map((bind: string, i) => 
-            <li key={i}>{bind}</li>
-          )
-        }
+          ).map((bind: string, i) => (
+            <span key={i}>
+              <li>{bind}</li>
+              {/* TODO */}
+              <button>remove</button>
+              <button>edit</button>
+            </span>
+        ))}
       </ul>
     </div>
   );
