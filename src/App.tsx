@@ -4,18 +4,6 @@ import MarkdownPreview from '@uiw/react-markdown-preview';
 import { Urbit } from '@urbit/http-api'
 import { renderToString } from 'react-dom/server'
 
-const existingBindings = [
-  '/~debug',
-  '/~/scry',
-  '/~/logout',
-  '/~/login',
-  '/~/channel',
-  '/spider',
-  '/apps',
-  '/.well-known/acme-challenge',
-  '/',
-]
-
 function App() {
   const [api, setApi] = useState<Urbit>()
   const [value, setValue] = useState('# %studio')
@@ -75,9 +63,7 @@ function App() {
         <button type="submit">save file</button>
       </form>
       <ul>
-        { bindings.filter(
-            (bind : string) => !existingBindings.includes(bind)
-          ).map((bind: string, i) => (
+        { bindings.map((bind: string, i) => (
             <span key={i}>
               <li><a href={`${bind}`}>{bind}</a></li>
               <button onClick={async (e) => {
