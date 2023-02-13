@@ -58,6 +58,46 @@ function App() {
         <MDEditor height={730} value={markdown} onChange={setMarkdown as any}/>
       </Col>
       <Col>
+        { bindings.length != 0 &&
+          <ListGroup as="ul" className="mb-3">
+            <label className="form-label">Files</label>
+            { bindings.map((bind: string, i) => (
+              <ListGroup.Item as="li" key={i} className={`d-flex justify-content-between ${fileName == bind ? 'bg-light' : ''}`}>
+                <a href={`${bind}`} target="_blank" rel="noreferrer">{bind}</a>
+                <Button variant="warning" onClick={async (e) => {
+                  e.preventDefault()
+                  if (!api) {
+                    console.error('api not connected')
+                    return
+                  }
+                  const res = await api.scry({
+                    app: 'blog',
+                    path: `/md${bind}`
+                  })
+                  setFileName(bind)
+                  setMarkdown(res)
+                }}>
+                  Edit
+                </Button>
+                <Button variant="danger" onClick={async (e) => {
+                  e.preventDefault()
+                  if (!api) {
+                    console.error('api not connected')
+                    return
+                  }
+                  const a = await api.poke({
+                    app: 'blog',
+                    mark: 'blog-action',
+                    json: { "delete-file": { "path": bind } }
+                  })
+                  setRescry(a)
+                }}>
+                  Remove
+                </Button>
+              </ListGroup.Item>
+            ))}
+            </ListGroup>
+          }
         <Form onSubmit={async (e) => {
           e.preventDefault()
           if (!api) {
@@ -77,47 +117,14 @@ function App() {
           setRescry(a)
         }}>
           <Form.Group className="mb-3">
-            <Form.Label>file location</Form.Label>
+            <Form.Label>File Location</Form.Label>
             <Form.Control value={fileName} onChange={e => setFileName(e.target.value)}/>
             <Form.Text className="text-muted">
-                your file will automatically be bound to this location
+              this markdown file will be bound to this url path on your ship
             </Form.Text>
           </Form.Group>
-          <Button type="submit">Save File</Button>
+          <Button type="submit" className="w-100 mb-3">Save File</Button>
         </Form>
-        <ListGroup as="ul">
-          { bindings.map((bind: string, i) => (
-              <ListGroup.Item as="li" key={i} active={fileName == bind}>
-                <a href={`${bind}`} target="_blank" rel="noreferrer">{bind}</a>
-                <Button onClick={async (e) => {
-                  e.preventDefault()
-                  if (!api) {
-                    console.error('api not connected')
-                    return
-                  }
-                  const a = await api.poke({
-                    app: 'blog',
-                    mark: 'blog-action',
-                    json: { "delete-file": { "path": bind } }
-                  })
-                  setRescry(a)
-                }}>remove</Button>
-                <Button onClick={async (e) => {
-                  e.preventDefault()
-                  if (!api) {
-                    console.error('api not connected')
-                    return
-                  }
-                  const res = await api.scry({
-                    app: 'blog',
-                    path: `/md${bind}`
-                  })
-                  setFileName(bind)
-                  setMarkdown(res)
-                }}>edit</Button>
-              </ListGroup.Item>
-          ))}
-        </ListGroup>
       </Col>
     </Row>
   );
