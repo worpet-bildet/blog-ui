@@ -55,7 +55,7 @@ function App() {
   return (
     <Row>
       <Col lg={9}>
-        <MDEditor height={730} value={markdown} onChange={setMarkdown as any}/>
+        <MDEditor height={730} value={markdown} onChange={setMarkdown as any} data-color-mode="light"/>
       </Col>
       <Col>
         { bindings.length != 0 &&
@@ -118,9 +118,15 @@ function App() {
         }}>
           <Form.Group className="mb-3">
             <Form.Label>File Location</Form.Label>
-            <Form.Control value={fileName} onChange={e => setFileName(e.target.value)}/>
+            <Form.Control
+              placeholder="/example/path"
+              value={fileName}
+              onChange={e => setFileName(e.target.value)}
+              pattern="^\/(?!(~.*)|(apps.*)|\/).+"
+              required
+            />
             <Form.Text className="text-muted">
-              this markdown file will be bound to this url path on your ship
+              The rendered markdown file will be bound to this url path on your ship. /, /~, and /apps are not allowed.
             </Form.Text>
           </Form.Group>
           <Button type="submit" className="w-100 mb-3">Save File</Button>
