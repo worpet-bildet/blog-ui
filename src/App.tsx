@@ -9,6 +9,7 @@ import Form from 'react-bootstrap/Form'
 import ListGroup from 'react-bootstrap/ListGroup'
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
+import Modal from 'react-bootstrap/Modal';
 
 const defaultString =
 `# Start Writing Here
@@ -29,6 +30,8 @@ function App() {
   const [fileName, setFileName] = useState('')
   const [bindings, setBindings] = useState<string[]>([])
   const [rescry, setRescry] = useState<any>()
+  const [showModal, setShowModal] = useState(false)
+  const [toRemove, setToRemove] = useState('')
 
   useEffect(() => {
     const getApi = async () => {
@@ -79,19 +82,10 @@ function App() {
                 }}>
                   Edit
                 </Button>
-                <Button variant="danger" onClick={async (e) => {
-                  e.preventDefault()
-                  if (!api) {
-                    console.error('api not connected')
-                    return
-                  }
-                  const a = await api.poke({
-                    app: 'blog',
-                    mark: 'blog-action',
-                    json: { "delete-file": { "path": bind } }
-                  })
-                  setRescry(a)
-                }}>
+                <Button 
+                  variant="danger"
+                  onClick={() => { setToRemove(bind); setShowModal(true)}}
+                >
                   Remove
                 </Button>
               </ListGroup.Item>
@@ -132,6 +126,33 @@ function App() {
           <Button type="submit" className="w-100 mb-3">Save File</Button>
         </Form>
       </Col>
+      <Modal show={showModal} onHide={() => setShowModal(false)}>
+        <Modal.Body>Are you sure you want to delete {toRemove}? You will not be able to recover it</Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => setShowModal(false)}>
+            Close
+          </Button>
+          <Button variant="danger" onClick={async (e) => {
+            e.preventDefault()
+            if (!api) {
+              console.error('api not connected')
+              return
+            }
+            const a = await api.poke({
+              app: 'blog',
+              mark: 'blog-action',
+              json: { "delete-file": { "path": toRemove } }
+            })
+            setRescry(a)
+            setShowModal(false)
+          }}>
+            Remove
+          </Button>
+          {/* <Button variant="primary" onClick={() => {console.log('asdf')}}>
+            Remove
+          </Button> */}
+        </Modal.Footer>
+      </Modal>
     </Row>
   );
 }
