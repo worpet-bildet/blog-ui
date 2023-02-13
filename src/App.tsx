@@ -3,13 +3,7 @@ import MDEditor from '@uiw/react-md-editor'
 import MarkdownPreview from '@uiw/react-markdown-preview'
 import { Urbit } from '@urbit/http-api'
 import { renderToString } from 'react-dom/server'
-//
-import { Button } from 'react-bootstrap'
-import Form from 'react-bootstrap/Form'
-import ListGroup from 'react-bootstrap/ListGroup'
-import Row from 'react-bootstrap/Row'
-import Col from 'react-bootstrap/Col'
-import Modal from 'react-bootstrap/Modal';
+import { Button, Form, ListGroup, Row, Col, Modal } from 'react-bootstrap'
 
 const defaultString =
 `# Start Writing Here
@@ -61,11 +55,11 @@ function App() {
         <MDEditor height={730} value={markdown} onChange={setMarkdown as any} data-color-mode="light"/>
       </Col>
       <Col>
-        { bindings.length != 0 &&
+        { bindings.length !== 0 &&
           <ListGroup as="ul" className="mb-3">
             <label className="form-label">Files</label>
             { bindings.map((bind: string, i) => (
-              <ListGroup.Item as="li" key={i} className={`d-flex justify-content-between ${fileName == bind ? 'bg-light' : ''}`}>
+              <ListGroup.Item as="li" key={i} className={`d-flex justify-content-between ${fileName === bind ? 'bg-light' : ''}`}>
                 <a href={`${bind}`} target="_blank" rel="noreferrer">{bind}</a>
                 <Button variant="warning" onClick={async (e) => {
                   e.preventDefault()
@@ -148,9 +142,6 @@ function App() {
           }}>
             Remove
           </Button>
-          {/* <Button variant="primary" onClick={() => {console.log('asdf')}}>
-            Remove
-          </Button> */}
         </Modal.Footer>
       </Modal>
     </Row>
