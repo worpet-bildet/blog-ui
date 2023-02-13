@@ -1,6 +1,6 @@
 {
   "name": "studio-ui",
-  "homepage": "/studio",
+  "homepage": "/apps/blog",
   "version": "0.1.0",
   "private": true,
   "dependencies": {

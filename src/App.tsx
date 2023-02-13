@@ -29,12 +29,15 @@ function App() {
 
   useEffect(() => {
     const getApi = async () => {
-      const api = await Urbit.authenticate({
-        ship : 'zod',
-        url: 'http://localhost:80',
-        code: 'lidlut-tabwed-pillex-ridrup',
-        verbose: false
-      })
+      const api = new Urbit('')
+      api.ship = (window as any).ship as string
+      (window as any).api = api
+      // const api = await Urbit.authenticate({
+      //   ship : 'zod',
+      //   url: 'http://localhost:80',
+      //   code: 'lidlut-tabwed-pillex-ridrup',
+      //   verbose: false
+      // })
       setApi(api)
     }
     getApi()
