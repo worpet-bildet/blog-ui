@@ -44,8 +44,8 @@ Happy blogging!
     display: block;
 }
 .wmde-markdown {
-    margin : 5rem;
-    font-size : 1.5vw;
+    margin : 7vw;
+    font-size : 3vh;
     color: #393939
 }
 </style>
