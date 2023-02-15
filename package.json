@@ -14,9 +14,7 @@
     "@uiw/react-markdown-preview": "^4.1.7",
     "@uiw/react-md-editor": "^3.20.2",
     "@urbit/http-api": "^2.3.0",
-    "bootstrap": "^5.2.3",
     "react": "^18.2.0",
-    "react-bootstrap": "^2.7.1",
     "react-dom": "^18.2.0",
     "react-markdown": "^8.0.5",
     "react-scripts": "5.0.1",
@@ -27,7 +25,8 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "tailwind": "npx tailwindcss -i ./src/input.css -o ./src/output.css --watch"
   },
   "eslintConfig": {
     "extends": [
@@ -46,5 +45,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "tailwindcss": "^3.2.6"
   }
 }
