@@ -5,3 +5,7 @@
 .wmde-markdown {
   font-family: 'Times New Roman', Times, serif;
 }
+
+.wmde-markdown li {
+  list-style: disc;
+}
