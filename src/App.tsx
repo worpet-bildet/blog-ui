@@ -87,34 +87,38 @@ function App() {
         </form>
         { bindings.length !== 0 &&
           <ul className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
-            <label className="block text-gray-700 font-bold mb-2"><code>%blog</code> bindings</label>
+            <label className="block text-gray-700 font-bold mb-5 text-center"><code>%blog</code> bindings</label>
             { bindings.map((bind: string, i) => (
               <li key={i} className="flex mb-3 text-blue-600 visited:text-purple-600">
-                <a href={`${bind}`} target="_blank" rel="noreferrer" className="m-auto">{bind}</a>
-                <button
-                  className="bg-yellow-500 hover:bg-yellow-700 text-white p-2 rounded mr-3"
-                  onClick={async (e) => {
-                    e.preventDefault()
-                    if (!api) {
-                      console.error('api not connected')
-                      return
-                    }
-                    const res = await api.scry({
-                      app: 'blog',
-                      path: `/md${bind}`
-                    })
-                    setFileName(bind)
-                    setMarkdown(res)
-                  }}
-                >
-                  Edit
-                </button>
-                <button 
-                  className="bg-red-500 hover:bg-red-700 text-white p-2 rounded"
-                  onClick={() => { setToRemove(bind); setShowModal(true)}}
-                >
-                  Remove
-                </button>
+                <div className="text-left flex-1 my-auto truncate">
+                  <a href={`${bind}`} target="_blank" rel="noreferrer">{bind}</a>
+                </div>
+                <div className="flex-1 flex justify-end">
+                  <button
+                    className="bg-yellow-500 hover:bg-yellow-700 text-white p-2 rounded mr-3"
+                    onClick={async (e) => {
+                      e.preventDefault()
+                      if (!api) {
+                        console.error('api not connected')
+                        return
+                      }
+                      const res = await api.scry({
+                        app: 'blog',
+                        path: `/md${bind}`
+                      })
+                      setFileName(bind)
+                      setMarkdown(res)
+                    }}
+                  >
+                    Edit
+                  </button>
+                  <button 
+                    className="bg-red-500 hover:bg-red-700 text-white p-2 rounded"
+                    onClick={() => { setToRemove(bind); setShowModal(true)}}
+                  >
+                    Remove
+                  </button>
+                </div>
               </li>
             ))}
             </ul>

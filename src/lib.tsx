@@ -3,7 +3,7 @@ export const defaultString =
 ![sigils](https://media.urbit.org/site/understanding-urbit/urbit-id/urbit-id-sigils%402x.png)
 
 Use markdown to write a file. If you don't know how to write markdown, take a quick read through [this](https://www.markdownguide.org/), it's easy.
-To bind a post to a URL, just type in the path on the right and click \`Save File\`. For example, if your ships's domain is \`https://sampel-palnet.urbit.org\`, and you type in \`/blog/1\`, you will be able to see your blog at \`https://sampel-palnet.urbit.org/blog/1\`. Try it now and you will see this post in browser.
+To bind a post to a URL, just type in the path on the right and click \`Save File\`. For example, if your ships's domain is \`https://sampel-palnet.urbit.org\`, and you type in \`/blog/1\`, you will be able to see your blog at \`https://sampel-palnet.urbit.org/blog/1\`. Try it now and you will see this post served from your ship!
 
 ## Notes on \`<style>\`
 - Use \`<style>\` tags to customize the layout.
