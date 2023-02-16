@@ -72,7 +72,7 @@ function App() {
 
   return (
     <div className="grid grid-rows-1 lg:grid-cols-12 md:grid-cols-1 gap-4">
-      <div className="col-span-9">
+      <div className="col-span-9 shadow-md">
         <MDEditor
           height={730}
           value={markdown}
