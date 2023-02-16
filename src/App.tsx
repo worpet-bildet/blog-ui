@@ -9,10 +9,20 @@ function App() {
   const [api, setApi] = useState<Urbit>()
   const [markdown, setMarkdown] = useState(defaultString)
   const [fileName, setFileName] = useState('')
-  const [bindings, setBindings] = useState<string[]>([])
+  const [pages, setPages] = useState<string[]>([])
+  const [bindings, setBindings] = useState<any>()
   const [rescry, setRescry] = useState<any>()
   const [showModal, setShowModal] = useState(false)
   const [toRemove, setToRemove] = useState('')
+  const [fileNameError, setFileNameError] = useState('')
+
+  useEffect(() => {
+    if (bindings?.[fileName]) {
+      setFileNameError(`${fileName} is in use by ${bindings[fileName]}`)
+    } else {
+      setFileNameError('')
+    }
+  }, [fileName, bindings])
 
   useEffect(() => {
     const getApi = async () => {
@@ -33,10 +43,15 @@ function App() {
   useEffect(() => {
     if (!api) return
     const getBindings = async () => {
-      let res = await api.scry({app: 'blog', path: '/pages'})
+      let res = await api.scry({app: 'blog', path: '/all-bindings'})
       setBindings(res)
     }
+    const getPages = async () => {
+      let res = await api.scry({app: 'blog', path: '/pages'})
+      setPages(res)
+    }
     getBindings()
+    getPages()
   }, [api, rescry])
 
   return (
@@ -76,19 +91,20 @@ function App() {
               pattern="^\/(?!(~.*)|(apps.*)|\/).+"
               required
             />
-            <p className="text-gray-500 text-xs italic">
-              Any <code>$path</code> already in use is not allowed.
-            </p>
+            {
+              fileNameError &&
+              <p className="text-red-500 text-xs italic mt-1">{fileNameError}</p>
+            }
           </div>
           <button
             type="submit"
             className="bg-blue-500 hover:bg-blue-700 text-white p-2 rounded w-full"
           >Save File</button>
         </form>
-        { bindings.length !== 0 &&
+        { pages.length !== 0 &&
           <ul className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
             <label className="block text-gray-700 font-bold mb-5 text-center"><code>%blog</code> bindings</label>
-            { bindings.map((bind: string, i) => (
+            { pages.map((bind: string, i) => (
               <li key={i} className="flex mb-3 text-blue-600 visited:text-purple-600">
                 <div className="text-left flex-1 my-auto truncate">
                   <a href={`${bind}`} target="_blank" rel="noreferrer"><code>{bind}</code></a>
