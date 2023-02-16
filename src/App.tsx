@@ -89,14 +89,16 @@ function App() {
         }>
           <div className="mb-4">
             <label className="block text-gray-700 font-bold mb-2">Bind to <code>$path</code>:</label>
-            <input
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-              placeholder="/example/path"
-              value={fileName}
-              onChange={e => setFileName(e.target.value)}
-              pattern="^\/(?!(~.*)|(apps.*)|\/).+"
-              required
-            />
+            <code>
+              <input
+                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                placeholder="/example/path"
+                value={fileName}
+                onChange={e => setFileName(e.target.value)}
+                pattern="^\/(?!(~.*)|(apps.*)|\/).+"
+                required
+              />
+            </code>
             {
               fileNameError &&
               <p className="text-red-500 text-xs italic mt-1">{fileNameError}</p>
@@ -105,7 +107,7 @@ function App() {
           <button
             type="submit"
             className="bg-blue-500 hover:bg-blue-700 text-white p-2 rounded w-full"
-          >Save File</button>
+          ><code>%save-file</code></button>
         </form>
         { pages.length !== 0 &&
           <ul className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
@@ -132,13 +134,13 @@ function App() {
                       setMarkdown(res)
                     }}
                   >
-                    Edit
+                    <code>%edit</code>
                   </button>
                   <button 
                     className="bg-red-500 hover:bg-red-700 text-white p-2 rounded"
                     onClick={() => setToRemove(bind)}
                   >
-                    Remove
+                    <code>%remove</code>
                   </button>
                 </div>
               </li>
