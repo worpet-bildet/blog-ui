@@ -6,14 +6,18 @@ import { renderToString } from 'react-dom/server'
 import { useState, useEffect } from 'react'
 
 function App() {
+  // api
   const [api, setApi] = useState<Urbit>()
-  const [markdown, setMarkdown] = useState(defaultString)
+  // inputs
   const [fileName, setFileName] = useState('')
+  const [markdown, setMarkdown] = useState(defaultString)
+  // scries
   const [pages, setPages] = useState<string[]>([])
   const [bindings, setBindings] = useState<any>()
+  // frontend state
   const [rescry, setRescry] = useState<any>()
-  const [showModal, setShowModal] = useState(false)
   const [toRemove, setToRemove] = useState('')
+  const [showModal, setShowModal] = useState(false)
   const [fileNameError, setFileNameError] = useState('')
 
   useEffect(() => {
