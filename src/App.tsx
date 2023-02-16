@@ -12,12 +12,13 @@ function App() {
   const [fileName, setFileName] = useState('')
   const [markdown, setMarkdown] = useState(defaultString)
   // scries
-  const [pages, setPages] = useState<string[]>([])
+  const [pages, setPages]       = useState<string[]>([])
   const [bindings, setBindings] = useState<any>()
   // frontend state
-  const [rescry, setRescry] = useState<any>()
-  const [toRemove, setToRemove] = useState('')
-  const [disableSave, setDisableSave] = useState(true)
+  const [toEdit, setToEdit]               = useState('')
+  const [rescry, setRescry]               = useState<any>()
+  const [toRemove, setToRemove]           = useState('')
+  const [disableSave, setDisableSave]     = useState(true)
   const [fileNameError, setFileNameError] = useState('')
   
   // api
@@ -55,7 +56,9 @@ function App() {
   // frontend state
   useEffect(() => {
     if (bindings?.[fileName]) {
-      setFileNameError(`${fileName} is in use by ${bindings[fileName]}`)
+      const inUse = bindings[fileName]
+      if (inUse === 'desk: %blog') setFileNameError(`you will overwrite ${fileName}`)
+      else setFileNameError(`${fileName} is in use by ${inUse}`)
     } else {
       setFileNameError('')
     }
@@ -91,6 +94,7 @@ function App() {
                   "md": markdown
             }}})
             setRescry(a)
+            setDisableSave(true)
           }
         }>
           <div className="mb-4">
@@ -126,26 +130,16 @@ function App() {
                 </div>
                 <div className="flex-1 flex justify-end">
                   <button
-                    className="bg-yellow-500 hover:bg-yellow-700 text-white p-2 rounded mr-3"
-                    onClick={async (e) => {
-                      e.preventDefault()
-                      if (!api) {
-                        console.error('api not connected')
-                        return
-                      }
-                      const res = await api.scry({
-                        app: 'blog',
-                        path: `/md${bind}`
-                      })
-                      setFileName(bind)
-                      setMarkdown(res)
-                    }}
+                    className="bg-yellow-500 hover:bg-yellow-700 text-white p-2 rounded mr-3 disabled:opacity-50"
+                    onClick={() => setToEdit(bind)}
+                    disabled={fileName === bind}
                   >
                     <code>%edit</code>
                   </button>
                   <button 
-                    className="bg-red-500 hover:bg-red-700 text-white p-2 rounded"
+                    className="bg-red-500 hover:bg-red-700 text-white p-2 rounded disabled:opacity-50"
                     onClick={() => setToRemove(bind)}
+                    disabled={fileName === bind}
                   >
                     <code>%remove</code>
                   </button>
@@ -157,7 +151,7 @@ function App() {
       </div>
       {
         toRemove && (
-          <>
+        <>
           <div
             className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none"
           >
@@ -186,13 +180,60 @@ function App() {
                       setToRemove('')
                     }}
                   >
-                    Remove
+                    <code>%remove</code>
                   </button>
                   <button
                     className="bg-gray-500 hover:bg-gray-700 text-white p-2 rounded"
                     onClick={() => setToRemove('')}
                   >
-                    Close
+                    <code>%close</code>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className="opacity-25 fixed inset-0 z-40 bg-black"></div>
+        </>
+        )
+      }
+      {
+        toEdit && !disableSave && (
+        <>
+          <div
+            className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none"
+          >
+            <div className="relative w-auto my-6 mx-auto max-w-3xl">
+              <div className="border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none">
+                <div className="relative p-6 flex-auto">
+                  <p className="my-4 text-slate-500 text-lg leading-relaxed">
+                    Are you sure you want to edit <code>{toEdit}</code>? You will lose all progress on your current draft
+                  </p>
+                </div>
+                <div className="flex items-center justify-end p-6 border-t border-solid border-slate-200 rounded-b">
+                  <button
+                    className="bg-red-500 hover:bg-red-700 text-white p-2 rounded mr-3"
+                    onClick={async (e) => {
+                      e.preventDefault()
+                      if (!api) {
+                        console.error('api not connected')
+                        return
+                      }
+                      const res = await api.scry({
+                        app: 'blog',
+                        path: `/md${toEdit}`
+                      })
+                      setFileName(toEdit)
+                      setMarkdown(res)
+                      setToEdit('')
+                    }}
+                  >
+                    <code>{`[%edit ${toEdit}]`}</code>
+                  </button>
+                  <button
+                    className="bg-gray-500 hover:bg-gray-700 text-white p-2 rounded"
+                    onClick={() => setToEdit('')}
+                  >
+                    <code>%close</code>
                   </button>
                 </div>
               </div>
