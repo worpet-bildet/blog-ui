@@ -10,7 +10,7 @@ To bind a post to a URL, just type in the path on the right and click \`%save-fi
 - Use \`<style>\` tags to customize the layout.
 - if you do not know CSS, either:
   - learn how [here](https://www.w3schools.com/css/), or 
-  - ask ChatGPT to "write me a style sheet for markdown" and it'll know what to do
+  - I would reccomend sticking with the default I made below unless you know CSS
 - Until further notice, styling is a little wonky: 
 - The editor and the document share a style sheet. This screws up the editors styling, so if you e.g. add \`body : { margin : 10rem }\` to the style sheet below, everything will get screwy
   - To avoid this, add \`.wmde-markdown\` in front of all styles to keep them from propogating, as I have done below
