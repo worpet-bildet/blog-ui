@@ -4,9 +4,7 @@ import { Urbit } from '@urbit/http-api'
 import { defaultString } from './lib'
 import { renderToString } from 'react-dom/server'
 import React, { useState, useEffect, useCallback } from 'react'
-import Drafts from './components/Drafts'
-import Published from './components/Published'
-import Modal from './components/Modal'
+import Published from './components/BlogList'
 
 function App() {
   // api
@@ -19,13 +17,9 @@ function App() {
   const [drafts, setDrafts]     = useState<string[]>([])
   const [bindings, setBindings] = useState<any>()
   // frontend state
-  const [toEdit, setToEdit]               = useState('')
-  const [toRemove, setToRemove]           = useState('')
-  const [toPublish, setToPublish]         = useState('')
   const [rescry, setRescry]               = useState<any>()
   const [disableSave, setDisableSave]     = useState(true)
   const [fileNameError, setFileNameError] = useState('')
-  const [showModal, setShowModal]         = useState(false)
   
   // api
   useEffect(() => {
@@ -53,7 +47,6 @@ function App() {
     }
     const getDrafts = async () => {
       let res = await api.scry({app: 'blog', path: '/drafts'})
-      console.log(res)
       setDrafts(res)
     }
     const getPublished = async () => {
@@ -109,7 +102,7 @@ function App() {
   }, [api, fileName, markdown])
 
   const handleSaveDraft = useCallback(
-    () => async (e : React.SyntheticEvent) => {
+    async (e : React.SyntheticEvent) => {
       e.preventDefault()
       if (!api) {
         console.error('api not connected')
@@ -127,9 +120,8 @@ function App() {
       setDisableSave(true)
   }, [api, fileName, markdown])
 
-  const handleUnpublish = useCallback(
-    async (e: React.SyntheticEvent) => {
-      e.preventDefault()
+  const handleDeleteDraft = useCallback(
+    async (toDelete: string) => {
       if (!api) {
         console.error('api not connected')
         return
@@ -137,15 +129,30 @@ function App() {
       const a = await api.poke({
         app: 'blog',
         mark: 'blog-action',
-        json: { 'unpublish': { 'path': toRemove } }
+        json: {
+          "delete-draft": {
+            "path": toDelete,
+      }}})
+      setRescry(a)
+      setDisableSave(true)
+  }, [api])
+
+  const handleUnpublish = useCallback(
+    async (toUnpublish: string) => {
+      if (!api) {
+        console.error('api not connected')
+        return
+      }
+      const a = await api.poke({
+        app: 'blog',
+        mark: 'blog-action',
+        json: { 'unpublish': { 'path': toUnpublish } }
       })
       setRescry(a)
-      setToRemove('')
-  }, [api, toRemove])
+  }, [api])
 
   const handleEdit = useCallback(
-    async (e: React.SyntheticEvent) => {
-      e.preventDefault()
+    async (toEdit: string) => {
       if (!api) {
         console.error('api not connected')
         return
@@ -156,8 +163,7 @@ function App() {
       })
       setFileName(toEdit)
       setMarkdown(res)
-      setToEdit('')
-    }, [api, toEdit])
+    }, [api])
 
   return (
     <div className="grid grid-rows-1 lg:grid-cols-12 md:grid-cols-1 gap-4">
@@ -172,7 +178,7 @@ function App() {
       <div className="col-span-3">
         <div className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
           <div className="mb-4">
-            <label className="block text-gray-700 font-bold mb-2">Bind to <code>$path</code>:</label>
+            <label className="block text-gray-700 font-bold mb-2">Name as <code>$path</code>:</label>
             <code>
               <input
                 className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
@@ -204,83 +210,14 @@ function App() {
               <code>%publish</code>
             </button>
           </div>
-
         </div>
-        <Published published={published} fileName={fileName} setToEdit={setToEdit} setToRemove={setToRemove}/>
-        <Drafts drafts={drafts} fileName={fileName} setToEdit={setToEdit} setToPublish={setToPublish}/>
+        <Published published={published} edit={handleEdit} remove={handleUnpublish}>
+          <label className="block text-gray-700 font-bold mb-5 text-center">Published <code>%blog</code>s</label>
+        </Published>
+        <Published published={drafts} edit={handleEdit} remove={handleDeleteDraft}>
+          <label className="block text-gray-700 font-bold mb-5 text-center"><code>%draft</code>s</label>
+        </Published>
       </div>
-      {/* {
-        showModal && 
-        <Modal text={''} buttonText={''} close={setShowModal} action={async () => {}}/>
-      } */}
-      {
-        toRemove && (
-        <>
-          <div
-            className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none"
-          >
-            <div className="relative w-auto my-6 mx-auto max-w-3xl">
-              <div className="border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none">
-                <div className="relative p-6 flex-auto">
-                  <p className="my-4 text-slate-500 text-lg leading-relaxed">
-                    Are you sure you want to delete <code>{toRemove}</code>? You will not be able to recover it
-                  </p>
-                </div>
-                <div className="flex items-center justify-end p-6 border-t border-solid border-slate-200 rounded-b">
-                  <button
-                    className="bg-red-500 hover:bg-red-700 text-white p-2 rounded mr-3"
-                    onClick={handleUnpublish}
-                  >
-                    <code>%remove</code>
-                  </button>
-                  <button
-                    className="bg-gray-500 hover:bg-gray-700 text-white p-2 rounded"
-                    onClick={() => setToRemove('')}
-                  >
-                    <code>%close</code>
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div className="opacity-25 fixed inset-0 z-40 bg-black"></div>
-        </>
-        )
-      }
-      {
-        toEdit && !disableSave && (
-        <>
-          <div
-            className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none"
-          >
-            <div className="relative w-auto my-6 mx-auto max-w-3xl">
-              <div className="border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none">
-                <div className="relative p-6 flex-auto">
-                  <p className="my-4 text-slate-500 text-lg leading-relaxed">
-                    Are you sure you want to edit <code>{toEdit}</code>? You will lose all progress on your current draft
-                  </p>
-                </div>
-                <div className="flex items-center justify-end p-6 border-t border-solid border-slate-200 rounded-b">
-                  <button
-                    className="bg-red-500 hover:bg-red-700 text-white p-2 rounded mr-3"
-                    onClick={handleEdit}
-                  >
-                    <code>{`[%edit ${toEdit}]`}</code>
-                  </button>
-                  <button
-                    className="bg-gray-500 hover:bg-gray-700 text-white p-2 rounded"
-                    onClick={() => setToEdit('')}
-                  >
-                    <code>%close</code>
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div className="opacity-25 fixed inset-0 z-40 bg-black"></div>
-        </>
-        )
-      }
     </div>
   );
 }
