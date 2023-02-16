@@ -57,10 +57,16 @@ function App() {
   useEffect(() => {
     if (bindings?.[fileName]) {
       const inUse = bindings[fileName]
-      if (inUse === 'desk: %blog') setFileNameError(`you will overwrite ${fileName}`)
-      else setFileNameError(`${fileName} is in use by ${inUse}`)
+      if (inUse === 'desk: %blog') {
+        setFileNameError(`you will overwrite ${fileName}`)
+        setDisableSave(false)
+      } else {
+        setFileNameError(`${fileName} is in use by ${inUse}`)
+        setDisableSave(true)
+      }
     } else {
       setFileNameError('')
+      setDisableSave(false)
     }
   }, [fileName, bindings])
 
@@ -117,7 +123,7 @@ function App() {
           <button
             type="submit"
             className="bg-blue-500 hover:bg-blue-700 text-white p-2 rounded w-full disabled:opacity-50"
-            disabled={disableSave}
+            disabled={disableSave || !fileName}
           ><code>%save-file</code></button>
         </form>
         { pages.length !== 0 &&
