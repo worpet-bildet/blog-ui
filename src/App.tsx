@@ -13,6 +13,7 @@ function App() {
   const [markdown, setMarkdown] = useState(defaultString)
   // scries
   const [pages, setPages]       = useState<string[]>([])
+  const [drafts, setDrafts]     = useState<string[]>([])
   const [bindings, setBindings] = useState<any>()
   // frontend state
   const [toEdit, setToEdit]               = useState('')
@@ -24,15 +25,15 @@ function App() {
   // api
   useEffect(() => {
     const getApi = async () => {
-      const api = new Urbit('')
-      api.ship = (window as any).ship as string
-      (window as any).api = api
-      // const api = await Urbit.authenticate({
-      //   ship : 'zod',
-      //   url: 'http://localhost:80',
-      //   code: 'lidlut-tabwed-pillex-ridrup',
-      //   verbose: true
-      // })
+      // const api = new Urbit('')
+      // api.ship = (window as any).ship as string
+      // (window as any).api = api
+      const api = await Urbit.authenticate({
+        ship : 'zod',
+        url: 'http://localhost:80',
+        code: 'lidlut-tabwed-pillex-ridrup',
+        verbose: true
+      })
       setApi(api)
     }
     getApi()
@@ -45,11 +46,17 @@ function App() {
       let res = await api.scry({app: 'blog', path: '/all-bindings'})
       setBindings(res)
     }
+    const getDrafts = async () => {
+      let res = await api.scry({app: 'blog', path: '/drafts'})
+      console.log(res)
+      setDrafts(res)
+    }
     const getPages = async () => {
       let res = await api.scry({app: 'blog', path: '/pages'})
       setPages(res)
     }
     getBindings()
+    getDrafts()
     getPages()
   }, [api, rescry])
 
@@ -87,28 +94,7 @@ function App() {
         />
       </div>
       <div className="col-span-3">
-        <form
-          className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4"
-          onSubmit={async (e) => {
-            e.preventDefault()
-            if (!api) {
-              console.error('api not connected')
-              return
-            }
-            const a = await api.poke({
-              app: 'blog',
-              mark: 'blog-action',
-              json: {
-                "save-file": {
-                  // NOTE need a leading slash
-                  "path": fileName,
-                  "html": renderToString(<MarkdownPreview source={markdown}/>),
-                  "md": markdown
-            }}})
-            setRescry(a)
-            setDisableSave(true)
-          }
-        }>
+        <div className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
           <div className="mb-4">
             <label className="block text-gray-700 font-bold mb-2">Bind to <code>$path</code>:</label>
             <code>
@@ -126,17 +112,62 @@ function App() {
               <p className="text-red-500 text-xs italic mt-1">{fileNameError}</p>
             }
           </div>
-          <button
-            type="submit"
-            className="bg-blue-500 hover:bg-blue-700 text-white p-2 rounded w-full disabled:opacity-50"
-            disabled={disableSave || !fileName}
-          ><code>%save-file</code></button>
-        </form>
+          <div className="flex text-xs gap-x-2">
+            <button
+              className="flex-1 bg-blue-500 hover:bg-blue-700 text-white p-2 rounded w-full disabled:opacity-50"
+              disabled={disableSave || !fileName}
+              onClick={async (e) => {
+                e.preventDefault()
+                if (!api) {
+                  console.error('api not connected')
+                  return
+                }
+                const a = await api.poke({
+                  app: 'blog',
+                  mark: 'blog-action',
+                  json: {
+                    "save-draft": {
+                      "path": fileName,
+                      "md": markdown
+                }}})
+                setRescry(a)
+                setDisableSave(true)
+              }}
+            >
+              <code>%save-draft</code>
+            </button>
+            <button
+              className="flex-1 bg-blue-500 hover:bg-blue-700 text-white p-2 rounded w-full disabled:opacity-50"
+              disabled={disableSave || !fileName}
+              onClick={async (e) => {
+                e.preventDefault()
+                if (!api) {
+                  console.error('api not connected')
+                  return
+                }
+                const a = await api.poke({
+                  app: 'blog',
+                  mark: 'blog-action',
+                  json: {
+                    "publish": {
+                      "path": fileName,
+                      "html": renderToString(<MarkdownPreview source={markdown}/>),
+                      "md": markdown
+                }}})
+                setRescry(a)
+                setDisableSave(true)
+              }}
+            >
+              <code>%publish</code>
+            </button>
+          </div>
+
+        </div>
         { pages.length !== 0 &&
           <ul className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
-            <label className="block text-gray-700 font-bold mb-5 text-center"><code>%blog</code> bindings</label>
+            <label className="block text-gray-700 font-bold mb-5 text-center">Published <code>%blog</code>s</label>
             { pages.map((bind: string, i) => (
-              <li key={i} className="flex mb-3 text-blue-600 visited:text-purple-600">
+              <li key={i} className="flex mb-3 text-blue-600 visited:text-purple-600 text-xs">
                 <div className="text-left flex-1 my-auto truncate">
                   <a href={`${bind}`} target="_blank" rel="noreferrer"><code>{bind}</code></a>
                 </div>
@@ -151,15 +182,41 @@ function App() {
                   <button 
                     className="bg-red-500 hover:bg-red-700 text-white p-2 rounded disabled:opacity-50"
                     onClick={() => setToRemove(bind)}
-                    disabled={fileName === bind}
                   >
-                    <code>%remove</code>
+                    <code>%unpublish</code>
                   </button>
                 </div>
               </li>
             ))}
-            </ul>
-          }
+          </ul>
+        }
+        { drafts.length !== 0 &&
+          <ul className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+            <label className="block text-gray-700 font-bold mb-5 text-center"><code>%draft</code>s</label>
+            { drafts.map((bind: string, i) => (
+              <li key={i} className="flex mb-3 text-blue-600 visited:text-purple-600 text-xs">
+                <div className="text-left flex-1 my-auto truncate">
+                  <a href={`${bind}`} target="_blank" rel="noreferrer"><code>{bind}</code></a>
+                </div>
+                <div className="flex-1 flex justify-end">
+                  <button
+                    className="bg-yellow-500 hover:bg-yellow-700 text-white p-2 rounded mr-3 disabled:opacity-50"
+                    onClick={() => setToEdit(bind)}
+                    disabled={fileName === bind}
+                  >
+                    <code>%edit</code>
+                  </button>
+                  <button 
+                    className="bg-blue-500 hover:bg-blue-700 text-white p-2 rounded disabled:opacity-50"
+                    onClick={() => setToRemove(bind)}
+                  >
+                    <code>%publish</code>
+                  </button>
+                </div>
+              </li>
+            ))}
+          </ul>
+        }
       </div>
       {
         toRemove && (
@@ -186,7 +243,7 @@ function App() {
                       const a = await api.poke({
                         app: 'blog',
                         mark: 'blog-action',
-                        json: { "delete-file": { "path": toRemove } }
+                        json: { 'unpublish': { 'path': toRemove } }
                       })
                       setRescry(a)
                       setToRemove('')
@@ -232,7 +289,7 @@ function App() {
                       }
                       const res = await api.scry({
                         app: 'blog',
-                        path: `/md${toEdit}`
+                        path: `/draft${toEdit}` // TODO need to be set to either /draft or /md depending
                       })
                       setFileName(toEdit)
                       setMarkdown(res)
