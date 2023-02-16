@@ -17,6 +17,7 @@ function App() {
   // frontend state
   const [rescry, setRescry] = useState<any>()
   const [toRemove, setToRemove] = useState('')
+  const [disableSave, setDisableSave] = useState(true)
   const [fileNameError, setFileNameError] = useState('')
   
   // api
@@ -63,7 +64,12 @@ function App() {
   return (
     <div className="grid grid-rows-1 lg:grid-cols-12 md:grid-cols-1 gap-4">
       <div className="col-span-9">
-        <MDEditor height={730} value={markdown} onChange={setMarkdown as any} data-color-mode="light"/>
+        <MDEditor
+          height={730}
+          value={markdown}
+          onChange={(e) => {setDisableSave(false); setMarkdown(e!)}}
+          data-color-mode="light"
+        />
       </div>
       <div className="col-span-3">
         <form
@@ -106,7 +112,8 @@ function App() {
           </div>
           <button
             type="submit"
-            className="bg-blue-500 hover:bg-blue-700 text-white p-2 rounded w-full"
+            className="bg-blue-500 hover:bg-blue-700 text-white p-2 rounded w-full disabled:opacity-50"
+            disabled={disableSave}
           ><code>%save-file</code></button>
         </form>
         { pages.length !== 0 &&
