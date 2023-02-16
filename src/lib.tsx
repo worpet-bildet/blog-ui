@@ -18,10 +18,10 @@ To bind a post to a URL, just type in the path on the right and click \`%save-fi
 
 
 ## Features Coming Soon
-- "follow" a ship for new blog posts
-- comments
-- sharable themes
-- drafts
+- \`%follow\` a ship for new posts
+- \`%comment\`
+- \`%theme\` to publish and share
+- \`%draft\`
 
 For any feature requests, make an issue or a PR into [here](https://github.com/tadad/blog-ui/issues) for the UI repo, or [here](https://github.com/tadad/blog/issues) for the hoon code.
 
