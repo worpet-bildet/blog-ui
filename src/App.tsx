@@ -17,7 +17,6 @@ function App() {
   // frontend state
   const [rescry, setRescry] = useState<any>()
   const [toRemove, setToRemove] = useState('')
-  const [showModal, setShowModal] = useState(false)
   const [fileNameError, setFileNameError] = useState('')
 
   useEffect(() => {
@@ -134,7 +133,7 @@ function App() {
                   </button>
                   <button 
                     className="bg-red-500 hover:bg-red-700 text-white p-2 rounded"
-                    onClick={() => { setToRemove(bind); setShowModal(true)}}
+                    onClick={() => setToRemove(bind)}
                   >
                     Remove
                   </button>
@@ -145,7 +144,7 @@ function App() {
           }
       </div>
       {
-        showModal && (
+        toRemove && (
           <>
           <div
             className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none"
@@ -172,14 +171,14 @@ function App() {
                         json: { "delete-file": { "path": toRemove } }
                       })
                       setRescry(a)
-                      setShowModal(false)
+                      setToRemove('')
                     }}
                   >
                     Remove
                   </button>
                   <button
                     className="bg-gray-500 hover:bg-gray-700 text-white p-2 rounded"
-                    onClick={() => setShowModal(false)}
+                    onClick={() => setToRemove('')}
                   >
                     Close
                   </button>
