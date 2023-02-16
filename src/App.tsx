@@ -6,6 +6,7 @@ import { renderToString } from 'react-dom/server'
 import React, { useState, useEffect, useCallback } from 'react'
 import Drafts from './components/Drafts'
 import Published from './components/Published'
+import Modal from './components/Modal'
 
 function App() {
   // api
@@ -24,6 +25,7 @@ function App() {
   const [rescry, setRescry]               = useState<any>()
   const [disableSave, setDisableSave]     = useState(true)
   const [fileNameError, setFileNameError] = useState('')
+  const [showModal, setShowModal]         = useState(false)
   
   // api
   useEffect(() => {
@@ -85,6 +87,26 @@ function App() {
       setDisableSave(false)
     }
   }, [fileName, bindings])
+
+  const handlePublish = useCallback(
+    async (e : React.SyntheticEvent) => {
+      e.preventDefault()
+      if (!api) {
+        console.error('api not connected')
+        return
+      }
+      const a = await api.poke({
+        app: 'blog',
+        mark: 'blog-action',
+        json: {
+          "publish": {
+            "path": fileName,
+            "html": renderToString(<MarkdownPreview source={markdown}/>),
+            "md": markdown
+      }}})
+      setRescry(a)
+      setDisableSave(true)
+  }, [api, fileName, markdown])
 
   const handleSaveDraft = useCallback(
     () => async (e : React.SyntheticEvent) => {
@@ -177,24 +199,7 @@ function App() {
             <button
               className="flex-1 bg-blue-500 hover:bg-blue-700 text-white p-2 rounded w-full disabled:opacity-50"
               disabled={disableSave || !fileName}
-              onClick={async (e) => {
-                e.preventDefault()
-                if (!api) {
-                  console.error('api not connected')
-                  return
-                }
-                const a = await api.poke({
-                  app: 'blog',
-                  mark: 'blog-action',
-                  json: {
-                    "publish": {
-                      "path": fileName,
-                      "html": renderToString(<MarkdownPreview source={markdown}/>),
-                      "md": markdown
-                }}})
-                setRescry(a)
-                setDisableSave(true)
-              }}
+              onClick={handlePublish}
             >
               <code>%publish</code>
             </button>
@@ -204,6 +209,10 @@ function App() {
         <Published published={published} fileName={fileName} setToEdit={setToEdit} setToRemove={setToRemove}/>
         <Drafts drafts={drafts} fileName={fileName} setToEdit={setToEdit} setToPublish={setToPublish}/>
       </div>
+      {/* {
+        showModal && 
+        <Modal text={''} buttonText={''} close={setShowModal} action={async () => {}}/>
+      } */}
       {
         toRemove && (
         <>
