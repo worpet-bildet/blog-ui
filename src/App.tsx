@@ -91,7 +91,7 @@ function App() {
             { bindings.map((bind: string, i) => (
               <li key={i} className="flex mb-3 text-blue-600 visited:text-purple-600">
                 <div className="text-left flex-1 my-auto truncate">
-                  <a href={`${bind}`} target="_blank" rel="noreferrer">{bind}</a>
+                  <a href={`${bind}`} target="_blank" rel="noreferrer"><code>{bind}</code></a>
                 </div>
                 <div className="flex-1 flex justify-end">
                   <button
@@ -134,7 +134,7 @@ function App() {
               <div className="border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none">
                 <div className="relative p-6 flex-auto">
                   <p className="my-4 text-slate-500 text-lg leading-relaxed">
-                    Are you sure you want to delete {toRemove}? You will not be able to recover it
+                    Are you sure you want to delete <code>{toRemove}</code>? You will not be able to recover it
                   </p>
                 </div>
                 <div className="flex items-center justify-end p-6 border-t border-solid border-slate-200 rounded-b">
