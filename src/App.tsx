@@ -67,7 +67,7 @@ function App() {
           }
         }>
           <div className="mb-4">
-            <label className="block text-gray font-bold mb-2">Files</label>
+            <label className="block text-gray-700 font-bold mb-2">Bind to <code>$path</code>:</label>
             <input
               className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
               placeholder="/example/path"
@@ -77,7 +77,7 @@ function App() {
               required
             />
             <p className="text-gray-500 text-xs italic">
-              The rendered markdown file will be bound to this url path on your ship. /, /~, and /apps are not allowed.
+              Any <code>$path</code> already in use is not allowed.
             </p>
           </div>
           <button
@@ -86,13 +86,13 @@ function App() {
           >Save File</button>
         </form>
         { bindings.length !== 0 &&
-          <ul className="list-none">
-            <label className="block text-gray-700 text-sm font-bold mb-2">Files</label>
+          <ul className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+            <label className="block text-gray-700 font-bold mb-2"><code>%blog</code> bindings</label>
             { bindings.map((bind: string, i) => (
-              <li key={i} className={`d-flex justify-content-between ${fileName === bind ? 'bg-light' : ''}`}>
-                <a href={`${bind}`} target="_blank" rel="noreferrer">{bind}</a>
+              <li key={i} className="flex mb-3 text-blue-600 visited:text-purple-600">
+                <a href={`${bind}`} target="_blank" rel="noreferrer" className="m-auto">{bind}</a>
                 <button
-                  className="bg-blue-500 hover:bg-blue-700 text-white p-2 rounded"
+                  className="bg-yellow-500 hover:bg-yellow-700 text-white p-2 rounded mr-3"
                   onClick={async (e) => {
                     e.preventDefault()
                     if (!api) {
@@ -110,7 +110,7 @@ function App() {
                   Edit
                 </button>
                 <button 
-                  className="bg-blue-500 hover:bg-blue-700 text-white p-2 rounded"
+                  className="bg-red-500 hover:bg-red-700 text-white p-2 rounded"
                   onClick={() => { setToRemove(bind); setShowModal(true)}}
                 >
                   Remove
@@ -135,13 +135,7 @@ function App() {
                 </div>
                 <div className="flex items-center justify-end p-6 border-t border-solid border-slate-200 rounded-b">
                   <button
-                    className="bg-blue-500 hover:bg-blue-700 text-white p-2 rounded"
-                    onClick={() => setShowModal(false)}
-                  >
-                    Close
-                  </button>
-                  <button
-                    className="bg-blue-500 hover:bg-blue-700 text-white p-2 rounded"
+                    className="bg-red-500 hover:bg-red-700 text-white p-2 rounded mr-3"
                     onClick={async (e) => {
                       e.preventDefault()
                       if (!api) {
@@ -158,6 +152,12 @@ function App() {
                     }}
                   >
                     Remove
+                  </button>
+                  <button
+                    className="bg-gray-500 hover:bg-gray-700 text-white p-2 rounded"
+                    onClick={() => setShowModal(false)}
+                  >
+                    Close
                   </button>
                 </div>
               </div>
