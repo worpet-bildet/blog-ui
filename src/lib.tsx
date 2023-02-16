@@ -10,18 +10,17 @@ To bind a post to a URL, just type in the path on the right and click \`%save-fi
 - Use \`<style>\` tags to customize the layout.
 - if you do not know CSS, either:
   - learn how [here](https://www.w3schools.com/css/), or 
-  - I would reccomend sticking with the default I made below unless you know CSS
+  - stick with the default I have provided
 - Until further notice, styling is a little wonky: 
-- The editor and the document share a style sheet. This screws up the editors styling, so if you e.g. add \`body : { margin : 10rem }\` to the style sheet below, everything will get screwy
+  - The editor and the document share a style sheet. Editing the default, so if you e.g. add \`body : { margin : 10rem }\` to the style sheet below, everything will get screwy
   - To avoid this, add \`.wmde-markdown\` in front of all styles to keep them from propogating, as I have done below
-  - This is a bug that I'll fix at some point
+  - I will make a chnage at some point that will invalidate all \`.wmde-markdown\` styles, so keep note of that if you decide to use that
 
 
 ## Features Coming Soon
 - \`%follow\` a ship for new posts
 - \`%comment\`
 - \`%theme\` to publish and share
-- \`%draft\`
 
 For any feature requests, make an issue or a PR into [here](https://github.com/tadad/blog-ui/issues) for the UI repo, or [here](https://github.com/tadad/blog/issues) for the hoon code.
 
