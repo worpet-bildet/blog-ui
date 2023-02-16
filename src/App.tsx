@@ -1,8 +1,8 @@
 import MDEditor from '@uiw/react-md-editor'
-import MarkdownPreview from '@uiw/react-markdown-preview'
 import { Urbit } from '@urbit/http-api'
 import { defaultString } from './lib'
-import { renderToString } from 'react-dom/server'
+import { marked } from 'marked'
+import css from 'css'
 import { useState, useEffect } from 'react'
 
 function App() {
@@ -24,15 +24,15 @@ function App() {
   // api
   useEffect(() => {
     const getApi = async () => {
-      const api = new Urbit('')
-      api.ship = (window as any).ship as string
-      (window as any).api = api
-      // const api = await Urbit.authenticate({
-      //   ship : 'zod',
-      //   url: 'http://localhost:80',
-      //   code: 'lidlut-tabwed-pillex-ridrup',
-      //   verbose: true
-      // })
+      // const api = new Urbit('')
+      // api.ship = (window as any).ship as string
+      // (window as any).api = api
+      const api = await Urbit.authenticate({
+        ship : 'zod',
+        url: 'http://localhost:80',
+        code: 'lidlut-tabwed-pillex-ridrup',
+        verbose: true
+      })
       setApi(api)
     }
     getApi()
@@ -73,12 +73,14 @@ function App() {
   return (
     <div className="grid grid-rows-1 lg:grid-cols-12 md:grid-cols-1 gap-4">
       <div className="col-span-9 shadow-md">
-        <MDEditor
-          height={730}
-          value={markdown}
-          onChange={(e) => {setDisableSave(false); setMarkdown(e!)}}
-          data-color-mode="light"
-        />
+        <html>
+          <MDEditor
+            height={730}
+            value={markdown}
+            onChange={(e) => {setDisableSave(false); setMarkdown(e!)}}
+            data-color-mode="light"
+          />
+        </html>
       </div>
       <div className="col-span-3">
         <form
@@ -94,9 +96,8 @@ function App() {
               mark: 'blog-action',
               json: {
                 "save-file": {
-                  // NOTE need a leading slash
                   "path": fileName,
-                  "html": renderToString(<MarkdownPreview source={markdown}/>),
+                  "html": marked(markdown),
                   "md": markdown
             }}})
             setRescry(a)
