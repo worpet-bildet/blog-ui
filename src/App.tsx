@@ -55,7 +55,13 @@ function App() {
 
   // frontend state
   useEffect(() => {
-    if (bindings?.[fileName]) {
+    if (fileName.charAt(fileName.length - 1) === '/') {
+      setFileNameError(`cannot end in a slash`)
+      setDisableSave(true)
+    } else if (fileName.charAt(0) !== '/'){
+      setFileNameError(`must start with a slash`)
+      setDisableSave(true)
+    } else if (bindings?.[fileName]) {
       const inUse = bindings[fileName]
       if (inUse === 'desk: %blog') {
         setFileNameError(`you will overwrite ${fileName}`)
@@ -111,7 +117,7 @@ function App() {
                 placeholder="/example/path"
                 value={fileName}
                 onChange={e => setFileName(e.target.value)}
-                pattern="^\/(?!(~.*)|(apps.*)|\/).+"
+                pattern="^\/.+(?!\/)"
                 required
               />
             </code>
