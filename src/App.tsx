@@ -18,15 +18,8 @@ function App() {
   const [rescry, setRescry] = useState<any>()
   const [toRemove, setToRemove] = useState('')
   const [fileNameError, setFileNameError] = useState('')
-
-  useEffect(() => {
-    if (bindings?.[fileName]) {
-      setFileNameError(`${fileName} is in use by ${bindings[fileName]}`)
-    } else {
-      setFileNameError('')
-    }
-  }, [fileName, bindings])
-
+  
+  // api
   useEffect(() => {
     const getApi = async () => {
       // const api = new Urbit('')
@@ -43,6 +36,7 @@ function App() {
     getApi()
   }, [])
 
+  // scries
   useEffect(() => {
     if (!api) return
     const getBindings = async () => {
@@ -56,6 +50,15 @@ function App() {
     getBindings()
     getPages()
   }, [api, rescry])
+
+  // frontend state
+  useEffect(() => {
+    if (bindings?.[fileName]) {
+      setFileNameError(`${fileName} is in use by ${bindings[fileName]}`)
+    } else {
+      setFileNameError('')
+    }
+  }, [fileName, bindings])
 
   return (
     <div className="grid grid-rows-1 lg:grid-cols-12 md:grid-cols-1 gap-4">
