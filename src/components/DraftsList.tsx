@@ -1,21 +1,21 @@
-type PublishedProps = {
-  published: string[]
+type DraftsProps = {
+  drafts: string[]
   edit: (toEdit: string) => Promise<void>
   remove: (toRemove: string) => Promise<void>
 }
 
-export default function Published(props : PublishedProps) {
-  const { published, edit, remove } = props
+export default function Drafts(props : DraftsProps) {
+  const { drafts, edit, remove } = props
 
-  if (published.length === 0) return <></>
+  if (drafts.length === 0) return <></>
 
   return (
     <ul className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
-      <label className="block text-gray-700 font-bold mb-5 text-center">Published <code>%blog</code>s</label>
-      { published.map((bind: string, i) => (
-        <li key={i} className="flex mb-3 text-blue-600 visited:text-purple-600 text-xs">
+      <label className="block text-gray-700 font-bold mb-5 text-center"><code>%draft</code>s</label>
+      { drafts.map((bind: string, i) => (
+        <li key={i} className="flex mb-3 text-xs">
           <div className="text-left flex-1 my-auto truncate">
-            <a href={`${bind}`} target="_blank" rel="noreferrer"><code>{bind}</code></a>
+            <code>{bind}</code>
           </div>
           <div className="flex-1 flex justify-end">
             <button
@@ -28,7 +28,7 @@ export default function Published(props : PublishedProps) {
               className="bg-red-500 hover:bg-red-700 text-white p-2 rounded disabled:opacity-50"
               onClick={() => remove(bind)}
             >
-              <code>%unpublish</code>
+              <code>%delete</code>
             </button>
           </div>
         </li>

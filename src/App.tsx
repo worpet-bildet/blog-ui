@@ -5,6 +5,7 @@ import { defaultString } from './lib'
 import { renderToString } from 'react-dom/server'
 import React, { useState, useEffect, useCallback } from 'react'
 import Published from './components/BlogList'
+import Drafts from './components/DraftsList'
 
 function App() {
   // api
@@ -211,12 +212,8 @@ function App() {
             </button>
           </div>
         </div>
-        <Published published={published} edit={handleEdit} remove={handleUnpublish}>
-          <label className="block text-gray-700 font-bold mb-5 text-center">Published <code>%blog</code>s</label>
-        </Published>
-        <Published published={drafts} edit={handleEdit} remove={handleDeleteDraft}>
-          <label className="block text-gray-700 font-bold mb-5 text-center"><code>%draft</code>s</label>
-        </Published>
+        <Published published={published} edit={handleEdit} remove={handleUnpublish}/>
+        <Drafts drafts={drafts} edit={handleEdit} remove={handleDeleteDraft}/>
       </div>
     </div>
   );
