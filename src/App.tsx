@@ -153,14 +153,14 @@ function App() {
   }, [api])
 
   const handleEdit = useCallback(
-    async (toEdit: string) => {
+    async (path: string, toEdit: string) => {
       if (!api) {
         console.error('api not connected')
         return
       }
       const res = await api.scry({
         app: 'blog',
-        path: `/draft${toEdit}` // TODO need to be set to either /draft or /md depending
+        path: `${path}${toEdit}` // path is either /draft or /md
       })
       setFileName(toEdit)
       setMarkdown(res)

@@ -1,6 +1,6 @@
 type PublishedProps = {
   published: string[]
-  edit: (toEdit: string) => Promise<void>
+  edit: (path: string, toEdit: string) => Promise<void>
   remove: (toRemove: string) => Promise<void>
 }
 
@@ -20,7 +20,7 @@ export default function Published(props : PublishedProps) {
           <div className="flex-1 flex justify-end">
             <button
               className="bg-yellow-500 hover:bg-yellow-700 text-white p-2 rounded mr-3 disabled:opacity-50"
-              onClick={() => edit(bind)}
+              onClick={() => edit('/md', bind)}
             >
               <code>%edit</code>
             </button>
