@@ -26,7 +26,7 @@
 .w-md-editor-toolbar ul  {
   display: flex;
   align-items: center;
-  gap: 24px;
+  gap: 20px;
 }
 
 .w-md-editor-toolbar ul li  {
