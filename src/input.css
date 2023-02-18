@@ -15,10 +15,30 @@
 }
 
 .w-md-editor-toolbar {
-  border-bottom: 1px solid #dfdfdf;
+  border: 1px solid #dfdfdf;
+  display: flex;
+  justify-content: space-between;
+  height: fit-content;
+  padding: 12px;
+  row-gap: 10px;
+}
+
+.w-md-editor-toolbar ul  {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
+.w-md-editor-toolbar ul li  {
+  transform: scale(1.8);
 }
 
 .w-md-editor-preview {
   box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+}
 
+.w-md-editor-text-pre > code,
+.w-md-editor-text-input {
+  font-size: 20px !important;
+  line-height: 22px !important;
 }
