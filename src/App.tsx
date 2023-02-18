@@ -1,11 +1,12 @@
 import MDEditor from '@uiw/react-md-editor'
-import MarkdownPreview from '@uiw/react-markdown-preview'
 import { Urbit } from '@urbit/http-api'
 import { defaultString } from './lib'
-import { renderToString } from 'react-dom/server'
 import React, { useState, useEffect, useCallback } from 'react'
 import Published from './components/BlogList'
 import Drafts from './components/DraftsList'
+import { marked } from 'marked'
+// @ts-ignore
+import parse from 'css/lib/parse'
 
 function App() {
   // api
@@ -25,15 +26,15 @@ function App() {
   // api
   useEffect(() => {
     const getApi = async () => {
-      const api = new Urbit('')
-      api.ship = (window as any).ship as string
-      (window as any).api = api
-      // const api = await Urbit.authenticate({
-      //   ship : 'zod',
-      //   url: 'http://localhost:80',
-      //   code: 'lidlut-tabwed-pillex-ridrup',
-      //   verbose: true
-      // })
+      // const api = new Urbit('')
+      // api.ship = (window as any).ship as string
+      // (window as any).api = api
+      const api = await Urbit.authenticate({
+        ship : 'zod',
+        url: 'http://localhost:80',
+        code: 'lidlut-tabwed-pillex-ridrup',
+        verbose: true
+      })
       setApi(api)
     }
     getApi()
@@ -82,6 +83,32 @@ function App() {
     }
   }, [fileName, bindings])
 
+  // fixes CSS altering the editor window
+  // TODO this is absolutely awful code. Probably introduces more bugs than it solves
+  // doesn't work for body and html
+  useEffect(() => {
+    let innerStyle = document.querySelector('div > style')?.innerHTML // almost 
+    if (!innerStyle) return;
+    const sheet = parse(innerStyle!).stylesheet
+    // @ts-ignore
+    sheet.rules.forEach((rule, i) => {
+      sheet.rules[i] = {
+        ...rule,
+        selectors: ['.w-md-markdown', ...rule.selectors]
+      }
+    }, sheet.rules)
+    // @ts-ignore
+    const newStyle = sheet.rules.map(rule => {
+      const newSelectors =  rule.selectors.join(' ')
+      let newDeclarations = ''
+      // @ts-ignore
+      rule.declarations.forEach(rule => newDeclarations = `${newDeclarations}${rule.property}:${rule.value};`)
+      return `${newSelectors} {${newDeclarations}}`
+    }).join('')
+    // @ts-ignore
+    innerStyle = newStyle
+  }, [markdown])
+
   const handlePublish = useCallback(
     async (e : React.SyntheticEvent) => {
       e.preventDefault()
@@ -95,7 +122,7 @@ function App() {
         json: {
           "publish": {
             "path": fileName,
-            "html": renderToString(<MarkdownPreview source={markdown}/>),
+            "html": marked.parse(markdown),
             "md": markdown
       }}})
       setRescry(a)
@@ -174,6 +201,7 @@ function App() {
           value={markdown}
           onChange={(e) => {setDisableSave(false); setMarkdown(e!)}}
           data-color-mode="light"
+          // previewOptions={{style : {color: 'red'}}} TODO use this for a better way to
         />
       </div>
       <div className="col-span-3">
