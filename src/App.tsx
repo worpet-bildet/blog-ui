@@ -201,7 +201,6 @@ function App() {
           value={markdown}
           onChange={(e) => {setDisableSave(false); setMarkdown(e!)}}
           data-color-mode="light"
-          // previewOptions={{style : {color: 'red'}}} TODO use this for a better way to
         />
       </div>
       <div className="col-span-3">
