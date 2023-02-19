@@ -6,6 +6,7 @@ import { renderToString } from 'react-dom/server'
 import React, { useState, useEffect, useCallback } from 'react'
 import Published from './components/BlogList'
 import Drafts from './components/DraftsList'
+import Modal from './components/Modal'
 
 function App() {
   // api
@@ -21,6 +22,7 @@ function App() {
   const [rescry, setRescry]               = useState<any>()
   const [disableSave, setDisableSave]     = useState(true)
   const [fileNameError, setFileNameError] = useState('')
+  const [justPublished, setJustPublished] = useState('')
   
   // api
   useEffect(() => {
@@ -100,6 +102,7 @@ function App() {
       }}})
       setRescry(a)
       setDisableSave(true)
+      setJustPublished(`${window.location.origin}${fileName}`)
   }, [api, fileName, markdown])
 
   const handleSaveDraft = useCallback(
@@ -215,6 +218,7 @@ function App() {
         <Published published={published} edit={handleEdit} remove={handleUnpublish}/>
         <Drafts drafts={drafts} edit={handleEdit} remove={handleDeleteDraft}/>
       </div>
+      { justPublished.length !== 0 && <Modal justPublished={justPublished} setJustPublished={setJustPublished}/> }
     </div>
   );
 }
