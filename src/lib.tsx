@@ -28,20 +28,5 @@ Happy blogging!
 
 \`~dachus-tiprel\`
 
-<style>
-.wmde-markdown h1, h2, h3, h4, h5, h6 {
-    color : black;
-    text-align: center;
-}
-.wmde-markdown img {
-    margin: auto;
-    max-height: 300px;
-    display: block;
-}
-.wmde-markdown {
-    margin : 7vw;
-    font-size : 3vh;
-    color: #393939
-}
-</style>
+*powered by [~urbit](http://urbit.org)*
 `

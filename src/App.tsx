@@ -25,15 +25,15 @@ function App() {
   // api
   useEffect(() => {
     const getApi = async () => {
-      const api = new Urbit('')
-      api.ship = (window as any).ship as string
-      (window as any).api = api
-      // const api = await Urbit.authenticate({
-      //   ship : 'zod',
-      //   url: 'http://localhost:80',
-      //   code: 'lidlut-tabwed-pillex-ridrup',
-      //   verbose: true
-      // })
+      // const api = new Urbit('')
+      // api.ship = (window as any).ship as string
+      // (window as any).api = api
+      const api = await Urbit.authenticate({
+        ship : 'zod',
+        url: 'http://localhost:80',
+        code: 'lidlut-tabwed-pillex-ridrup',
+        verbose: true
+      })
       setApi(api)
     }
     getApi()
@@ -96,7 +96,8 @@ function App() {
           "publish": {
             "path": fileName,
             "html": renderToString(<MarkdownPreview source={markdown}/>),
-            "md": markdown
+            "md": markdown,
+            "theme": "default" // TODO
       }}})
       setRescry(a)
       setDisableSave(true)
