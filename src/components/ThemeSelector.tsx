@@ -17,7 +17,7 @@ export default function ThemeSelector(props: ThemeSelectorProps) {
         className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
         onClick={toggleDropdown}
       >
-        <code>{theme.length === 0 ? "%select-a-theme" : theme}</code>
+        <code>{`%${theme}`}</code>
       </button>
       <ul className={`bg-white w-full absolute rounded ${isOpen && 'border shadow'}`}>
         {isOpen && (
@@ -34,7 +34,7 @@ export default function ThemeSelector(props: ThemeSelectorProps) {
             </div>
           )})}
           <button
-            className="block text-blue rounded py-2 w-full m-auto"
+            className="block text-white rounded py-2 w-full m-auto bg-blue-500 hover:bg-blue-700"
             onClick={() => {console.log('new theme')}}
           >
             <code>%new-theme</code>

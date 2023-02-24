@@ -12,6 +12,7 @@
 
 .w-md-editor {
   box-shadow: none;
+  height: 95vh !important;
 }
 
 .w-md-editor-toolbar {

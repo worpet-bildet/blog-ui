@@ -1,12 +1,11 @@
 import MDEditor from '@uiw/react-md-editor'
-import MarkdownPreview from '@uiw/react-markdown-preview'
 import { Urbit } from '@urbit/http-api'
 import { defaultString } from './lib'
-import { renderToString } from 'react-dom/server'
 import React, { useState, useEffect, useCallback } from 'react'
 import Published from './components/BlogList'
 import Drafts from './components/DraftsList'
 import ThemeSelector from './components/ThemeSelector'
+import { marked } from 'marked'
 
 function App() {
   // api
@@ -17,11 +16,12 @@ function App() {
   // scries
   const [published, setPublished] = useState<string[]>([])
   const [drafts, setDrafts]       = useState<string[]>([])
-  const [themes, setThemes]       = useState<string[]>(['asdf', 'fdfdfd', 'fdfadfa', 'dfdfdf', 'asdfdf', 'fdfd', 'fddf'])
+  const [themes, setThemes]       = useState<string[]>([])
   const [bindings, setBindings]   = useState<any>()
   // frontend state
-  const [theme, setTheme]                 = useState('')
+  const [theme, setTheme]                 = useState('default')
   const [rescry, setRescry]               = useState<any>()
+  const [themeCss, setThemeCss]           = useState('')
   const [disableSave, setDisableSave]     = useState(true)
   const [fileNameError, setFileNameError] = useState('')
   
@@ -90,6 +90,16 @@ function App() {
     }
   }, [fileName, bindings])
 
+  useEffect(() => {
+    if (!api) return
+    const getTheme = async() => {
+      let res = await api.scry({app: 'blog', path: `/theme/${theme}`})
+      setThemeCss(res)
+    }
+    getTheme()
+  }, [api, theme])
+
+  // callbacks
   const handlePublish = useCallback(
     async (e : React.SyntheticEvent) => {
       e.preventDefault()
@@ -103,7 +113,7 @@ function App() {
         json: {
           "publish": {
             "path": fileName,
-            "html": renderToString(<MarkdownPreview source={markdown}/>),
+            "html": marked.parse(markdown),
             "md": markdown,
             "theme": "default" // TODO
       }}})
@@ -179,7 +189,6 @@ function App() {
     <div className="grid grid-rows-1 lg:grid-cols-12 md:grid-cols-1 gap-4">
       <div className="col-span-9 shadow-md">
         <MDEditor
-          height={730}
           value={markdown}
           onChange={(e) => {setDisableSave(false); setMarkdown(e!)}}
           data-color-mode="light"
