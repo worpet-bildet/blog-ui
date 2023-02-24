@@ -6,6 +6,7 @@ import { renderToString } from 'react-dom/server'
 import React, { useState, useEffect, useCallback } from 'react'
 import Published from './components/BlogList'
 import Drafts from './components/DraftsList'
+import ThemeSelector from './components/ThemeSelector'
 
 function App() {
   // api
@@ -16,8 +17,10 @@ function App() {
   // scries
   const [published, setPublished] = useState<string[]>([])
   const [drafts, setDrafts]       = useState<string[]>([])
+  const [themes, setThemes]       = useState<string[]>(['asdf', 'fdfdfd', 'fdfadfa', 'dfdfdf', 'asdfdf', 'fdfd', 'fddf'])
   const [bindings, setBindings]   = useState<any>()
   // frontend state
+  const [theme, setTheme]                 = useState('')
   const [rescry, setRescry]               = useState<any>()
   const [disableSave, setDisableSave]     = useState(true)
   const [fileNameError, setFileNameError] = useState('')
@@ -54,9 +57,14 @@ function App() {
       let res = await api.scry({app: 'blog', path: '/pages'})
       setPublished(res)
     }
+    const getThemes = async() => {
+      let res = await api.scry({app: 'blog', path: '/themes'})
+      setThemes(res)
+    }
     getBindings()
     getDrafts()
     getPublished()
+    getThemes()
   }, [api, rescry])
 
   // frontend state
@@ -183,7 +191,7 @@ function App() {
             <label className="block text-gray-700 font-bold mb-2">Name as <code>$path</code>:</label>
             <code>
               <input
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                className="shadow border rounded w-full py-2 px-3 text-gray-700 focus:outline-none"
                 placeholder="/example/path"
                 value={fileName}
                 onChange={e => setFileName(e.target.value)}
@@ -195,17 +203,19 @@ function App() {
               fileNameError &&
               <p className="text-red-500 text-xs italic mt-1">{fileNameError}</p>
             }
+            <label className="block text-gray-700 font-bold mb-2 mt-3"><code>%theme</code>:</label>
+            <ThemeSelector themes={themes} theme={theme} setTheme={setTheme} />
           </div>
           <div className="flex text-xs gap-x-2">
             <button
-              className="flex-1 bg-blue-500 hover:bg-blue-700 text-white p-2 rounded w-full disabled:opacity-50"
+              className="flex-1 bg-blue-500 hover:bg-blue-700 text-white p-2 rounded w-full" // TODO disbaled:something
               disabled={disableSave || !fileName}
               onClick={handleSaveDraft}
             >
               <code>%save-draft</code>
             </button>
             <button
-              className="flex-1 bg-blue-500 hover:bg-blue-700 text-white p-2 rounded w-full disabled:opacity-50"
+              className="flex-1 bg-blue-500 hover:bg-blue-700 text-white p-2 rounded w-full" // TODO disbaled:something
               disabled={disableSave || !fileName}
               onClick={handlePublish}
             >
