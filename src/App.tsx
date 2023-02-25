@@ -90,14 +90,6 @@ function App() {
     }
   }, [fileName, bindings])
 
-  useEffect(() => {
-    if (!api) return
-    const getTheme = async() => {
-      let res = await api.scry({app: 'blog', path: `/theme/${theme}`})
-      setThemeCss(res)
-    }
-    getTheme()
-  }, [api, theme])
 
   // callbacks
   const handlePublish = useCallback(
@@ -115,11 +107,11 @@ function App() {
             "path": fileName,
             "html": marked.parse(markdown),
             "md": markdown,
-            "theme": "default" // TODO
+            "theme": theme
       }}})
       setRescry(a)
       setDisableSave(true)
-  }, [api, fileName, markdown])
+  }, [api, fileName, markdown, theme])
 
   const handleSaveDraft = useCallback(
     async (e : React.SyntheticEvent) => {
@@ -187,11 +179,19 @@ function App() {
 
   return (
     <div className="grid grid-rows-1 lg:grid-cols-12 md:grid-cols-1 gap-4">
-      <div className="col-span-9 shadow-md">
+      <div className="col-span-9 shadow-md flex">
         <MDEditor
           value={markdown}
           onChange={(e) => {setDisableSave(false); setMarkdown(e!)}}
           data-color-mode="light"
+          preview="edit"
+          hideToolbar
+          className="flex-1"
+        />
+        <iframe
+          title="preview"
+          srcDoc={`${marked.parse(markdown)}`}
+          className="flex-1"
         />
       </div>
       <div className="col-span-3">
