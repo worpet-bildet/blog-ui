@@ -20,6 +20,7 @@ To bind a post to a URL, just type in the path on the right and click \`%save-fi
 - styling no longer impacts the editor window
 - preview is much more accurate
 - editor+preview extend the whole height of the page
+- no longer need to use .wmde-markdown for your CSS styles
 
 For any feature requests, make an issue or a PR into [here](https://github.com/tadad/blog-ui/issues) for the UI repo, or [here](https://github.com/tadad/blog/issues) for the hoon code.
 
