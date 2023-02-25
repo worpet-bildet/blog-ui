@@ -1,8 +1,7 @@
+import { marked } from 'marked'
 import MDEditor from '@uiw/react-md-editor'
-import MarkdownPreview from '@uiw/react-markdown-preview'
 import { Urbit } from '@urbit/http-api'
 import { defaultString } from './lib'
-import { renderToString } from 'react-dom/server'
 import React, { useState, useEffect, useCallback } from 'react'
 import Published from './components/BlogList'
 import Drafts from './components/DraftsList'
@@ -97,7 +96,7 @@ function App() {
         json: {
           "publish": {
             "path": fileName,
-            "html": renderToString(<MarkdownPreview source={markdown}/>),
+            "html": marked.parse(markdown),
             "md": markdown
       }}})
       setRescry(a)
@@ -171,12 +170,19 @@ function App() {
 
   return (
     <div className="grid grid-rows-1 lg:grid-cols-12 md:grid-cols-1 gap-4">
-      <div className="col-span-9 shadow-md">
+      <div className="col-span-9 shadow-md flex">
         <MDEditor
-          height={730}
-          value={markdown}
-          onChange={(e) => {setDisableSave(false); setMarkdown(e!)}}
-          data-color-mode="light"
+            value={markdown}
+            onChange={(e) => {setDisableSave(false); setMarkdown(e!)}}
+            data-color-mode="light"
+            preview="edit"
+            hideToolbar
+            className="flex-1"
+        />
+        <iframe
+          title="preview"
+          srcDoc={`${marked.parse(markdown)}`}
+          className="flex-1"
         />
       </div>
       <div className="col-span-3">

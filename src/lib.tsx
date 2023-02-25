@@ -11,16 +11,16 @@ To bind a post to a URL, just type in the path on the right and click \`%save-fi
 - if you do not know CSS, either:
   - learn how [here](https://www.w3schools.com/css/), or 
   - stick with the default I have provided
-- Until further notice, styling is a little wonky: 
-  - The editor and the document share a style sheet. Editing the default, so if you e.g. add \`body : { margin : 10rem }\` to the style sheet below, everything will get screwy
-  - To avoid this, add \`.wmde-markdown\` in front of all styles to keep them from propogating, as I have done below
-  - I will make a chnage at some point that will invalidate all \`.wmde-markdown\` styles, so keep note of that if you decide to use that
-
 
 ## Features Coming Soon
 - \`%follow\` a ship for new posts
-- \`%comment\`
 - \`%theme\` to publish and share
+
+## Fixes:
+- styling no longer impacts the editor window
+- preview is much more accurate
+- editor+preview extend the whole height of the page
+- no longer need to use .wmde-markdown for your CSS styles
 
 For any feature requests, make an issue or a PR into [here](https://github.com/tadad/blog-ui/issues) for the UI repo, or [here](https://github.com/tadad/blog/issues) for the hoon code.
 
@@ -29,16 +29,16 @@ Happy blogging!
 \`~dachus-tiprel\`
 
 <style>
-.wmde-markdown h1, h2, h3, h4, h5, h6 {
+h1, h2, h3, h4, h5, h6 {
     color : black;
     text-align: center;
 }
-.wmde-markdown img {
+img {
     margin: auto;
     max-height: 300px;
     display: block;
 }
-.wmde-markdown {
+body {
     margin : 7vw;
     font-size : 3vh;
     color: #393939
