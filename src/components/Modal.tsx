@@ -15,7 +15,7 @@ export default function Modal(props: ModalProps) {
         <div className="flex items-center min-h-screen px-4 py-8">
           <div className="relative w-full max-w-lg p-4 mx-auto bg-white rounded-md shadow-lg text-center">
             <h4 className="text-md font-bold">
-              Share your <code>%blog</code> via <code>%rumors</code>?
+              Success! Do you want to share your <code>%blog</code> via <code>%rumors</code>?
             </h4>
             <p className="text-xs mb-4 text-gray-500">(download <code>%pals</code> and <code>%rumors</code> from <code>~paldev</code>)</p>
             <form
