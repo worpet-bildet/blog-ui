@@ -1,3 +1,4 @@
+import { marked } from 'marked'
 import MDEditor from '@uiw/react-md-editor'
 import { Urbit } from '@urbit/http-api'
 import { defaultString } from './lib'
@@ -5,7 +6,7 @@ import React, { useState, useEffect, useCallback } from 'react'
 import Published from './components/BlogList'
 import Drafts from './components/DraftsList'
 import ThemeSelector from './components/ThemeSelector'
-import { marked } from 'marked'
+import Modal from './components/Modal'
 
 function App() {
   // api
@@ -24,6 +25,7 @@ function App() {
   const [themeCss, setThemeCss]           = useState('')
   const [disableSave, setDisableSave]     = useState(true)
   const [fileNameError, setFileNameError] = useState('')
+  const [justPublished, setJustPublished] = useState('')
   
   // api
   useEffect(() => {
@@ -111,7 +113,9 @@ function App() {
       }}})
       setRescry(a)
       setDisableSave(true)
+      setJustPublished(`${window.location.origin}${fileName}`)
   }, [api, fileName, markdown, theme])
+
 
   const handleSaveDraft = useCallback(
     async (e : React.SyntheticEvent) => {
@@ -235,6 +239,7 @@ function App() {
         <Published published={published} edit={handleEdit} remove={handleUnpublish}/>
         <Drafts drafts={drafts} edit={handleEdit} remove={handleDeleteDraft}/>
       </div>
+      { justPublished.length !== 0 && <Modal justPublished={justPublished} setJustPublished={setJustPublished}/> }
     </div>
   );
 }
