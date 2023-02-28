@@ -23,6 +23,7 @@ function App() {
   const [theme, setTheme]                 = useState('default')
   const [rescry, setRescry]               = useState<any>()
   const [themeCss, setThemeCss]           = useState('')
+  const [showPreview, setShowPreview]     = useState(false)
   const [disableSave, setDisableSave]     = useState(true)
   const [fileNameError, setFileNameError] = useState('')
   const [justPublished, setJustPublished] = useState('')
@@ -185,18 +186,20 @@ function App() {
     <div className="grid grid-rows-1 lg:grid-cols-12 md:grid-cols-1 gap-4">
       <div className="col-span-9 shadow-md flex">
         <MDEditor
-          value={markdown}
-          onChange={(e) => {setDisableSave(false); setMarkdown(e!)}}
-          data-color-mode="light"
-          preview="edit"
-          hideToolbar
-          className="flex-1"
+            value={markdown}
+            onChange={(e) => {setDisableSave(false); setMarkdown(e!)}}
+            data-color-mode="light"
+            preview="edit"
+            hideToolbar
+            className={`${showPreview? 'flex-1' : 'flex-2'}`}
         />
-        <iframe
-          title="preview"
-          srcDoc={`${marked.parse(markdown)}`}
-          className="flex-1"
-        />
+        { showPreview && 
+          <iframe
+            title="preview"
+            srcDoc={`${marked.parse(markdown)}`}
+            className="flex-1"
+          />
+        }
       </div>
       <div className="col-span-3">
         <div className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
@@ -238,6 +241,14 @@ function App() {
         </div>
         <Published published={published} edit={handleEdit} remove={handleUnpublish}/>
         <Drafts drafts={drafts} edit={handleEdit} remove={handleDeleteDraft}/>
+        <label>
+          <input
+            type="checkbox"
+            checked={showPreview}
+            onChange={() => setShowPreview(!showPreview)}
+          />
+          <code className="ml-2">%show-preview</code>
+        </label>
       </div>
       { justPublished.length !== 0 && <Modal justPublished={justPublished} setJustPublished={setJustPublished}/> }
     </div>
