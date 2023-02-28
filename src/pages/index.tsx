@@ -130,73 +130,11 @@ function Index() {
     }, [api])
 
   return (
-    <div className="grid grid-rows-1 lg:grid-cols-12 md:grid-cols-1 gap-4">
-      <div className="col-span-9 shadow-md flex">
-        <MDEditor
-            value={markdown}
-            onChange={(e) => {setDisableSave(false); setMarkdown(e!)}}
-            data-color-mode="light"
-            preview="edit"
-            hideToolbar
-            className={`${showPreview? 'flex-1' : 'flex-2'}`}
-        />
-        { showPreview && 
-          <iframe
-            title="preview"
-            srcDoc={`${marked.parse(markdown)}`}
-            className="flex-1"
-          />
-        }
-      </div>
-      <div className="col-span-3">
-        <div className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
-          <div className="mb-4">
-            <label className="block text-gray-700 font-bold mb-2">Name as <code>$path</code>:</label>
-            <code>
-              <input
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                placeholder="/example/path"
-                value={fileName}
-                onChange={e => setFileName(e.target.value)}
-                pattern="^\/.+(?!\/)"
-                required
-              />
-            </code>
-            {
-              fileNameError &&
-              <p className="text-red-500 text-xs italic mt-1">{fileNameError}</p>
-            }
-          </div>
-          <div className="flex text-xs gap-x-2">
-            <button
-              className="flex-1 bg-blue-500 hover:bg-blue-700 text-white p-2 rounded w-full disabled:opacity-50"
-              disabled={disableSave || !fileName}
-              onClick={handleSaveDraft}
-            >
-              <code>%save-draft</code>
-            </button>
-            <button
-              className="flex-1 bg-blue-500 hover:bg-blue-700 text-white p-2 rounded w-full disabled:opacity-50"
-              disabled={disableSave || !fileName}
-              onClick={handlePublish}
-            >
-              <code>%publish</code>
-            </button>
-          </div>
-        </div>
-        <Published published={published} edit={handleEdit} remove={handleUnpublish}/>
-        <Drafts drafts={drafts} edit={handleEdit} remove={handleDeleteDraft}/>
-        <label>
-          <input
-            type="checkbox"
-            checked={showPreview}
-            onChange={() => setShowPreview(!showPreview)}
-          />
-          <code className="ml-2">%show-preview</code>
-        </label>
-      </div>
+    <>
+      {/* <Published published={published} edit={handleEdit} remove={handleUnpublish}/> */}
+      {/* <Drafts drafts={drafts} edit={handleEdit} remove={handleDeleteDraft}/> */}
       { justPublished.length !== 0 && <Modal justPublished={justPublished} setJustPublished={setJustPublished}/> }
-    </div>
+    </>
   );
 }
 

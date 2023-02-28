@@ -9,6 +9,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@heroicons/react": "^2.0.16",
     "@tailwindcss/nesting": "^0.0.0-insiders.565cd3e",
     "@uiw/react-md-editor": "^3.20.5",
     "@urbit/http-api": "^2.3.0",
