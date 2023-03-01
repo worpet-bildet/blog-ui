@@ -11,12 +11,12 @@ type BottomBarProps = {
 export default function BottomBar({ showPreview, setShowPreview }: BottomBarProps) {
   const [fileName, setFileName] = useState('')
   const [fileNameError, setFileNameError] = useState('')
-  const { markdown, pages, allBindings, drafts } = useStore() // TODO could make more efficient by not rerendering every time
+  const { markdown, pages, allBindings, drafts, getAll } = useStore() // TODO could make more efficient by not rerendering every time
 
   const handlePublish = useCallback(
     async (e : React.SyntheticEvent) => {
       e.preventDefault()
-      const a = await api.poke({
+      await api.poke({
         app: 'blog',
         mark: 'blog-action',
         json: {
@@ -25,12 +25,13 @@ export default function BottomBar({ showPreview, setShowPreview }: BottomBarProp
             "html": marked.parse(markdown),
             "md": markdown
       }}})
+      getAll()
   }, [fileName, markdown])
 
   const handleSaveDraft = useCallback(
     async (e : React.SyntheticEvent) => {
       e.preventDefault()
-      const a = await api.poke({
+      await api.poke({
         app: 'blog',
         mark: 'blog-action',
         json: {
@@ -38,6 +39,7 @@ export default function BottomBar({ showPreview, setShowPreview }: BottomBarProp
             "path": fileName,
             "md": markdown
       }}})
+      getAll()
   },  [fileName, markdown])
 
   useEffect(() => {

@@ -18,7 +18,7 @@ export default function Published() {
       setMarkdown(res)
     }
     getDraft()
-  }, [])
+  }, [match])
 
   return (
     <Editor/>
