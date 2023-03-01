@@ -1,13 +1,12 @@
 import { useState } from 'react'
 
 type ModalProps = {
-  justPublished: string;
-  setJustPublished:  React.Dispatch<React.SetStateAction<string>>
+  justPublished: string
+  setShowModal: React.Dispatch<React.SetStateAction<boolean>>
 };
 
-export default function Modal(props: ModalProps) {
-  const { justPublished, setJustPublished } = props;
-  const [value, setValue] = useState(`AAAAH I'M GONNA %blog : ${justPublished}`)
+export default function Modal({ justPublished, setShowModal }: ModalProps) {
+  const [value, setValue] = useState(`AAAAH I'M GONNA %blog : ${window.location.origin}${justPublished}`)
 
   return (
     <>
@@ -38,7 +37,7 @@ export default function Modal(props: ModalProps) {
                 ><code>%send</code></button>
                 <button
                   className="flex-1 bg-red-500 hover:bg-red-700 text-white p-2 rounded w-full"
-                  onClick={() => setJustPublished('')}
+                  onClick={() => setShowModal(false)}
                 ><code>%close</code></button>
               </div>
             </form>

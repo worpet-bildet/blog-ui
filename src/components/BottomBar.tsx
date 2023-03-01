@@ -2,6 +2,7 @@ import { useState, useCallback, useEffect } from 'react'
 import { api } from '../state/api'
 import { marked } from 'marked'
 import { useStore } from '../state/base'
+import Modal from './Modal'
 
 type BottomBarProps = {
   showPreview: boolean
@@ -11,6 +12,7 @@ type BottomBarProps = {
 export default function BottomBar({ showPreview, setShowPreview }: BottomBarProps) {
   const [fileName, setFileName] = useState('')
   const [fileNameError, setFileNameError] = useState('')
+  const [showModal, setShowModal] = useState(false)
   const { markdown, pages, allBindings, drafts, getAll } = useStore() // TODO could make more efficient by not rerendering every time
 
   const handlePublish = useCallback(
@@ -26,6 +28,7 @@ export default function BottomBar({ showPreview, setShowPreview }: BottomBarProp
             "md": markdown
       }}})
       getAll()
+      setShowModal(true)
   }, [fileName, markdown])
 
   const handleSaveDraft = useCallback(
@@ -104,6 +107,7 @@ export default function BottomBar({ showPreview, setShowPreview }: BottomBarProp
           />
         </label>
       </div>
+      { showModal && <Modal justPublished={fileName} setShowModal={setShowModal}/>}
     </div>
   )
 }
