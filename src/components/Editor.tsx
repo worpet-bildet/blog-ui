@@ -28,15 +28,16 @@ export default function Editor({ markdown, setMarkdown } : EditorProps) {
             className="flex-1"
           />
         }
+        <label className="absolute right-4 bottom-4 bg-white p-2 rounded">
+          <code className="mr-2">%show-preview</code>
+          <input
+            type="checkbox"
+            checked={showPreview}
+            onChange={() => setShowPreview(!showPreview)}
+          />
+        </label>
       </div>
-      <label>
-        <input
-          type="checkbox"
-          checked={showPreview}
-          onChange={() => setShowPreview(!showPreview)}
-        />
-        <code className="ml-2">%show-preview</code>
-      </label>
+
     </>
   )
 }

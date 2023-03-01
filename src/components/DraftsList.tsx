@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { api } from '../state/api'
-import { TrashIcon, PencilSquareIcon } from "@heroicons/react/24/solid"
+import { PencilSquareIcon } from "@heroicons/react/24/solid"
 import { Link } from 'react-router-dom'
 
 export default function Drafts() {
@@ -27,19 +27,10 @@ export default function Drafts() {
           </div>
           <div className="flex-1 flex justify-end">
             <Link to={`/draft${bind}`}>
-              <button
-                className="bg-yellow-500 hover:bg-yellow-700 text-white p-2 rounded mr-3 disabled:opacity-50"
-                // onClick={() => edit('/draft', bind)}
-              >
+              <button className="bg-yellow-500 hover:bg-yellow-700 text-white p-2 rounded disabled:opacity-50">
                 <PencilSquareIcon className="w-4 h-4" style={{ color : 'white' }}/>
               </button>
             </Link>
-            <button
-              className="bg-red-500 hover:bg-red-700 text-white p-2 rounded disabled:opacity-50"
-              // onClick={() => remove(bind)}
-            >
-              <TrashIcon className="w-4 h-4" style={{ color : 'white' }}/>
-            </button>
           </div>
         </li>
       ))}

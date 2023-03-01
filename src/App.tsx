@@ -11,7 +11,7 @@ function App() {
       <Layout>
         <Routes>
           <Route path="/" index element={<Index />} />
-          <Route path="/published" element={<Published/>} />
+          <Route path="/published/*" element={<Published/>} />
           <Route path="/draft/*" element={<Draft />  } />
           <Route path="/theme/:theme" element={<Theme />} />
         </Routes>
