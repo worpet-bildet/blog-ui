@@ -14,7 +14,7 @@ export default function BottomBar({ showPreview, setShowPreview }: BottomBarProp
   const [fileName, setFileName]           = useState('')
   const [fileNameError, setFileNameError] = useState('')
   const [showModal, setShowModal]         = useState(false)
-  const { markdown, pages, allBindings, drafts, themes, getAll } = useStore() // TODO could make more efficient by not rerendering every time
+  const { markdown, pages, allBindings, drafts, themes, getAll, setPreviewCss } = useStore()
 
   useEffect(() => {
     setFileName('/' + document.location.pathname.split('/').slice(4).join('/'))  // TODO ugly
@@ -22,6 +22,11 @@ export default function BottomBar({ showPreview, setShowPreview }: BottomBarProp
 
   useEffect(() => {
     console.log('theme', theme)
+    async function getTheme() {
+      const asdf = await api.scry({ app : 'blog', path: `/theme/${theme}`})
+      setPreviewCss(asdf)
+    }
+    getTheme()
   }, [theme])
 
   const handlePublish = useCallback(
