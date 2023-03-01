@@ -1,12 +1,13 @@
-import { useState, useEffect } from 'react'
+import { useEffect } from 'react'
 import { useMatch } from 'react-router-dom'
 import { api } from '../state/api'
 import Editor from '../components/Editor'
+import { useStore } from '../state/base'
 
 export default function Draft() {
-  const [draft, setDraft] = useState('')
   const match = useMatch('*')
-  console.log(match)
+  const setMarkdown = useStore((state) => state.setMarkdown)
+
   useEffect(() => {
     const getDraft = async () => {
       if (!match) return
@@ -14,12 +15,12 @@ export default function Draft() {
         app: 'blog',
         path: match.pathname
       })
-      setDraft(res)
+      setMarkdown(res)
     }
     getDraft()
   }, [])
 
   return (
-    <Editor markdown={draft} setMarkdown={setDraft}/>
+    <Editor/>
   )
 }

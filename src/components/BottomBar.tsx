@@ -1,7 +1,7 @@
 import { useState, useCallback, useEffect } from 'react'
 import { api } from '../state/api'
 import { marked } from 'marked'
-import { useStore, State } from '../state/base'
+import { useStore } from '../state/base'
 
 type BottomBarProps = {
   showPreview: boolean
@@ -11,7 +11,7 @@ type BottomBarProps = {
 export default function BottomBar({ showPreview, setShowPreview }: BottomBarProps) {
   const [fileName, setFileName] = useState('')
   const [fileNameError, setFileNameError] = useState('')
-  const { markdown, bindings, } = useStore()
+  const { markdown, pages, allBindings, drafts } = useStore() // TODO could make more efficient by not rerendering every time
 
   const handlePublish = useCallback(
     async (e : React.SyntheticEvent) => {
@@ -45,17 +45,19 @@ export default function BottomBar({ showPreview, setShowPreview }: BottomBarProp
       setFileNameError(`cannot end in a slash`)
     } else if (fileName.charAt(0) !== '/'){
       setFileNameError(`must start with a slash`)
-    } else if (bindings?.[fileName as any]) {
-      const inUse = bindings[fileName as any]
+    } else if (allBindings[fileName]) {
+      const inUse = allBindings[fileName]
       if (inUse === 'desk: %blog') {
         setFileNameError(`you will overwrite ${fileName}`)
       } else {
         setFileNameError(`${fileName} is in use by ${inUse}`)
       }
+    } else if (drafts.includes(fileName)) {
+      setFileNameError(`you will overwrite ${fileName}`)
     } else {
       setFileNameError('')
     }
-  }, [fileName, bindings])
+  }, [fileName, pages])
 
   return (
     <div className="absolute bottom-4 w-100 absolute bg-white flex space-x-6">

@@ -1,28 +1,17 @@
-import { useState, useEffect } from 'react'
-import { api } from '../state/api'
 import { Link } from 'react-router-dom'
 import { PencilSquareIcon } from "@heroicons/react/24/solid"
+import { useStore } from '../state/base'
 
 export default function SideBar() {
-  const [drafts, setDrafts] = useState<string[]>([])
-  const [published, setPublished] = useState<string[]>([])
-
-  useEffect(() => {
-    async function getData() {
-      let published = await api.scry({app: 'blog', path: '/pages'})
-      let drafts = await api.scry({app: 'blog', path: '/drafts'})
-      setDrafts(drafts)
-      setPublished(published)
-    }
-    getData()
-  }, [])
+  const drafts = useStore(state => state.drafts)
+  const pages  = useStore(state => state.pages)
 
   return (
     <div className="overflow-y-scroll">
       <h1 className="text-3xl"><code>%blog</code></h1>
       <ul className="bg-white px-4 pt-6">
         <label className="block text-gray-700 font-bold mb-5">Published <code>%blog</code>s</label>
-        { published.map((pub: string, i) => (
+        { pages.map((pub: string, i) => (
           <li key={i} className="flex mb-1 text-blue-600 visited:text-purple-600 text-xs">
             <div className="text-left flex-1 my-auto truncate">
               <a href={`${pub}`} target="_blank" rel="noreferrer"><code>{pub}</code></a>

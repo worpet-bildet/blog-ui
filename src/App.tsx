@@ -4,8 +4,16 @@ import Layout from './components/Layout'
 import Draft from './pages/Draft'
 import Theme from './pages/Theme'
 import Published from './pages/Published'
+import { useStore } from './state/base'
+import { useEffect } from 'react'
 
 function App() {
+  const getAll = useStore(state => state.getAll)
+
+  useEffect(() => {
+    getAll()
+  }, [])
+
   return (
     <BrowserRouter basename="/apps/blog">
       <Layout>

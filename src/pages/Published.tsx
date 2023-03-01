@@ -1,11 +1,12 @@
-import { useState, useEffect } from 'react'
+import { useEffect } from 'react'
 import { useMatch } from 'react-router-dom'
 import { api } from '../state/api'
 import Editor from '../components/Editor'
+import { useStore } from '../state/base'
 
 export default function Published() {
-  const [post, setPost] = useState('')
   const match = useMatch('*')
+  const setMarkdown = useStore((state) => state.setMarkdown)
 
   useEffect(() => {
     const getDraft = async () => {
@@ -14,12 +15,12 @@ export default function Published() {
         app: 'blog',
         path: '/md/' + match?.pathname.split('/').slice(2).join('/') // TODO ugly code
       })
-      setPost(res)
+      setMarkdown(res)
     }
     getDraft()
   }, [])
 
   return (
-    <Editor markdown={post} setMarkdown={setPost}/>
+    <Editor/>
   )
 }

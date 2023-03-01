@@ -1,14 +1,13 @@
 import MDEditor from '@uiw/react-md-editor'
 import { marked } from 'marked'
-import { useState } from 'react';
-import BottomBar from './BottomBar';
+import { useState } from 'react'
+import BottomBar from './BottomBar'
+import { useStore } from '../state/base'
 
-type EditorProps = {
-  markdown : string
-  setMarkdown : (value: React.SetStateAction<string>) => void
-}
+export default function Editor() {
+  const markdown    = useStore(state => state.markdown)
+  const setMarkdown = useStore(state => state.setMarkdown)
 
-export default function Editor({ markdown, setMarkdown } : EditorProps) {
   const [showPreview, setShowPreview] = useState(false)
 
   return (
