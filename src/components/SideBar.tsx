@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react'
-import Publish from './Publish'
 import { api } from '../state/api'
 import { Link } from 'react-router-dom'
 import { PencilSquareIcon } from "@heroicons/react/24/solid"
@@ -9,24 +8,14 @@ export default function SideBar() {
   const [published, setPublished] = useState<string[]>([])
 
   useEffect(() => {
-    async function getPublished() {
-      let res = await api.scry({app: 'blog', path: '/pages'})
-      setPublished(res)
+    async function getData() {
+      let published = await api.scry({app: 'blog', path: '/pages'})
+      let drafts = await api.scry({app: 'blog', path: '/drafts'})
+      setDrafts(drafts)
+      setPublished(published)
     }
-    async function getDrafts() {
-      let res = await api.scry({app: 'blog', path: '/drafts'})
-      setDrafts(res)
-    }
-    getPublished()
-    getDrafts()
+    getData()
   }, [])
-
-  
-  useEffect(() => {
-
-
-  }, [])
-
 
   return (
     <div className="overflow-y-scroll">

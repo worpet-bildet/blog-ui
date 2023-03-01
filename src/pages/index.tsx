@@ -2,8 +2,6 @@ import React, { useState, useEffect, useCallback } from 'react'
 import { marked } from 'marked'
 import MDEditor from '@uiw/react-md-editor'
 import { defaultText } from '../lib/defaultText'
-import Published from '../components/BlogList'
-import Drafts from '../components/DraftsList'
 import Modal from '../components/Modal'
 import { api } from '../state/api'
 
