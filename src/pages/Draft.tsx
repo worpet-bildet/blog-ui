@@ -18,7 +18,7 @@ export default function Draft() {
       setMarkdown(res)
     }
     getDraft()
-  }, [])
+  }, [match])
 
   return (
     <Editor/>

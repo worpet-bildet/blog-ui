@@ -15,6 +15,10 @@ export default function BottomBar({ showPreview, setShowPreview }: BottomBarProp
   const [showModal, setShowModal] = useState(false)
   const { markdown, pages, allBindings, drafts, getAll } = useStore() // TODO could make more efficient by not rerendering every time
 
+  useEffect(() => {
+    setFileName('/' + document.location.pathname.split('/').slice(4).join('/'))  // TODO ugly
+  }, [document.location.pathname])
+
   const handlePublish = useCallback(
     async (e : React.SyntheticEvent) => {
       e.preventDefault()
