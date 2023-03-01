@@ -69,9 +69,9 @@ export default function BottomBar({ showPreview, setShowPreview }: BottomBarProp
   }, [fileName, pages])
 
   return (
-    <div className="absolute bottom-4 w-100 absolute bg-white flex space-x-6">
-      <div className="mb-4">
-        <label className="block text-gray-700 font-bold mb-2"><code>$path:</code></label>
+    <>
+      <div className="">
+        {/* <label className="block text-gray-700 font-bold mb-2"><code>$path:</code></label> */}
         <code>
           <input
             className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
@@ -101,17 +101,13 @@ export default function BottomBar({ showPreview, setShowPreview }: BottomBarProp
       >
         <code>%publish</code>
       </button>
-      <div>
-        <label>
-          <code className="mr-2">%show-preview</code>
-          <input
-            type="checkbox"
-            checked={showPreview}
-            onChange={() => setShowPreview(!showPreview)}
-          />
-        </label>
-      </div>
+      <button
+        className={`${showPreview? 'bg-blue-700 shadow-inner shadow' : 'bg-blue-500'} flex-1 text-white p-2 rounded w-full`}
+        onClick={() => setShowPreview(!showPreview)}
+      >
+        <code className="mr-2">{showPreview? '%hide-preview' : '%show-preview'}</code>
+      </button>
       { showModal && <Modal justPublished={fileName} setShowModal={setShowModal}/>}
-    </div>
+    </>
   )
 }
