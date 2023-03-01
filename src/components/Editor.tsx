@@ -19,7 +19,7 @@ export default function Editor() {
         preview="edit"
         hideToolbar
         className={`w-full h-full ${showPreview? 'col-span-1' : 'col-span-2'} overflow-y-scroll`}
-        height=''
+        height={'' as any}
       />
       { showPreview && 
         <iframe

@@ -70,8 +70,8 @@ export default function BottomBar({ showPreview, setShowPreview }: BottomBarProp
 
   return (
     <>
-      <div className="">
-        {/* <label className="block text-gray-700 font-bold mb-2"><code>$path:</code></label> */}
+      <div className='relative'>
+        <p className="text-red-500 text-xs italic bottom-10 absolute">{fileNameError}</p>
         <code>
           <input
             className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
@@ -82,10 +82,6 @@ export default function BottomBar({ showPreview, setShowPreview }: BottomBarProp
             required
           />
         </code>
-        {
-          fileNameError &&
-          <p className="text-red-500 text-xs italic mt-1">{fileNameError}</p>
-        }
       </div>
       <button
         className="flex-1 bg-blue-500 hover:bg-blue-700 text-white p-2 rounded w-full disabled:opacity-50"
