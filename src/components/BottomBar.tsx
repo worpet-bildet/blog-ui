@@ -10,14 +10,23 @@ type BottomBarProps = {
 }
 
 export default function BottomBar({ showPreview, setShowPreview }: BottomBarProps) {
-  const [fileName, setFileName] = useState('')
+  const [theme, setTheme]                 = useState('none')
+  const [fileName, setFileName]           = useState('')
   const [fileNameError, setFileNameError] = useState('')
-  const [showModal, setShowModal] = useState(false)
-  const { markdown, pages, allBindings, drafts, getAll } = useStore() // TODO could make more efficient by not rerendering every time
+  const [showModal, setShowModal]         = useState(false)
+  const { markdown, pages, allBindings, drafts, themes, getAll, setPreviewCss } = useStore()
 
   useEffect(() => {
     setFileName('/' + document.location.pathname.split('/').slice(4).join('/'))  // TODO ugly
   }, [document.location.pathname])
+
+  useEffect(() => {
+    async function getTheme() {
+      const css = await api.scry({ app : 'blog', path: `/theme/${theme}`})
+      setPreviewCss(css)
+    }
+    getTheme()
+  }, [theme])
 
   const handlePublish = useCallback(
     async (e : React.SyntheticEvent) => {
@@ -29,11 +38,12 @@ export default function BottomBar({ showPreview, setShowPreview }: BottomBarProp
           "publish": {
             "path": fileName,
             "html": marked.parse(markdown),
-            "md": markdown
+            "md": markdown,
+            "theme": theme
       }}})
       getAll()
       setShowModal(true)
-  }, [fileName, markdown])
+  }, [fileName, markdown, theme])
 
   const handleSaveDraft = useCallback(
     async (e : React.SyntheticEvent) => {
@@ -83,6 +93,11 @@ export default function BottomBar({ showPreview, setShowPreview }: BottomBarProp
           />
         </code>
       </div>
+      <select className="rounded border-none focus:outline-none" value={theme} onChange={(e) => setTheme(e.target.value)}>
+        {themes.map((theme, i) => 
+          <option value={theme} key={i}>%{theme}</option>
+        )}
+      </select>
       <button
         className="flex-1 bg-blue-500 hover:bg-blue-700 text-white p-2 rounded w-full disabled:opacity-50"
         disabled={!fileName}

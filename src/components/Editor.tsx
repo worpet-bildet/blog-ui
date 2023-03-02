@@ -7,6 +7,7 @@ import { useStore } from '../state/base'
 export default function Editor() {
   const markdown    = useStore(state => state.markdown)
   const setMarkdown = useStore(state => state.setMarkdown)
+  const previewCss  = useStore(state => state.previewCss)
 
   const [showPreview, setShowPreview] = useState(false)
 
@@ -24,7 +25,7 @@ export default function Editor() {
       { showPreview && 
         <iframe
           title="preview"
-          srcDoc={`${marked.parse(markdown)}`}
+          srcDoc={`${marked.parse(markdown)}<style>${previewCss}</style>`}
           className="col-span-1 w-full h-full"
         />
       }
