@@ -80,8 +80,7 @@ export default function BottomBar({ showPreview, setShowPreview }: BottomBarProp
 
   return (
     <>
-      <div className='relative'>
-        <p className="text-red-500 text-xs italic bottom-10 absolute">{fileNameError}</p>
+      <div>
         <code>
           <input
             className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
@@ -92,6 +91,7 @@ export default function BottomBar({ showPreview, setShowPreview }: BottomBarProp
             required
           />
         </code>
+        <p className="text-red-500 text-xs italic">{fileNameError}</p>
       </div>
       <select className="rounded border-none focus:outline-none" value={theme} onChange={(e) => setTheme(e.target.value)}>
         {themes.map((theme, i) => 
