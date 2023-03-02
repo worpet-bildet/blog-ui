@@ -32,15 +32,18 @@ export default function Theme() {
   },  [name, css])
 
   return (
-    <div className="h-full">
-      <h1 className="text-3xl"><code>%theme-editor</code></h1>
-      <p className="text-gray-700">put your css below to add a theme</p>
-      <textarea
-        className="h-full w-full"
-        value={css}
-        onChange={e => setCss(e.target.value)}
-      />
-      <div className="flex gap-x-4">
+    <div className="grid grid-rows-2 h-full gap-y-2" style={{gridTemplateRows : 'auto 50px'}}>
+      <div className="col-span-2 h-full">
+        <h1 className="text-3xl"><code>%theme-editor</code></h1>
+        <p className="text-gray-700">put your css below to add a theme</p>
+        <textarea
+          className="w-full"
+          style={{resize: 'none', height: '90%'}}
+          value={css}
+          onChange={e => setCss(e.target.value)}
+        />
+      </div>
+      <div className="flex gap-x-4 col-span-2">
         <input
           className="flex-1 shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
           value={name}

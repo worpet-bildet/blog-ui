@@ -12,7 +12,7 @@ export default function Editor() {
   const [showPreview, setShowPreview] = useState(false)
 
   return (
-    <div className="grid grid-rows-2 grid-cols-2 h-full" style={{gridTemplateRows : '1fr auto', height: '95vh'}}>
+    <div className="grid grid-rows-2 grid-cols-2 h-full gap-y-2" style={{gridTemplateRows : 'auto 50px'}}>
       <MDEditor
         value={markdown}
         onChange={(e) => {setMarkdown(e!)}}
@@ -29,7 +29,7 @@ export default function Editor() {
           className="col-span-1 w-full h-full"
         />
       }
-      <div className="col-span-2 flex gap-x-4 pt-5" style={{height: 'fit-content'}}>
+      <div className="col-span-2 flex gap-x-4">
         <BottomBar showPreview={showPreview} setShowPreview={setShowPreview}/>
       </div>
     </div>
