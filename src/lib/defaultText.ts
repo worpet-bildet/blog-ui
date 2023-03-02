@@ -20,21 +20,4 @@ For any feature requests, make an issue or a PR into [here](https://github.com/t
 Happy blogging!
 
 \`~dachus-tiprel\`
-
-<style>
-h1, h2, h3, h4, h5, h6 {
-    color : black;
-    text-align: center;
-}
-img {
-    margin: auto;
-    max-height: 300px;
-    display: block;
-}
-body {
-    margin : 7vw;
-    font-size : 3vh;
-    color: #393939
-}
-</style>
 `

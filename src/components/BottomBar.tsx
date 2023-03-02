@@ -21,10 +21,9 @@ export default function BottomBar({ showPreview, setShowPreview }: BottomBarProp
   }, [document.location.pathname])
 
   useEffect(() => {
-    console.log('theme', theme)
     async function getTheme() {
-      const asdf = await api.scry({ app : 'blog', path: `/theme/${theme}`})
-      setPreviewCss(asdf)
+      const css = await api.scry({ app : 'blog', path: `/theme/${theme}`})
+      setPreviewCss(css)
     }
     getTheme()
   }, [theme])
@@ -44,7 +43,7 @@ export default function BottomBar({ showPreview, setShowPreview }: BottomBarProp
       }}})
       getAll()
       setShowModal(true)
-  }, [fileName, markdown])
+  }, [fileName, markdown, theme])
 
   const handleSaveDraft = useCallback(
     async (e : React.SyntheticEvent) => {
@@ -94,7 +93,7 @@ export default function BottomBar({ showPreview, setShowPreview }: BottomBarProp
           />
         </code>
       </div>
-      <select className="rounded border-none focus:outline-none" onChange={(e) => setTheme(e.target.value)}>
+      <select className="rounded border-none focus:outline-none" value={theme} onChange={(e) => setTheme(e.target.value)}>
         {themes.map((theme, i) => 
           <option value={theme} key={i}>%{theme}</option>
         )}

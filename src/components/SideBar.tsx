@@ -1,12 +1,10 @@
-import { useState, useCallback } from 'react'
+import { useCallback } from 'react'
 import { Link } from 'react-router-dom'
 import { PencilSquareIcon, TrashIcon } from "@heroicons/react/24/solid"
 import { useStore } from '../state/base'
 import { api } from '../state/api'
-import ThemeModal from './ThemeModal'
 
 export default function SideBar() {
-  const [showModal, setShowModal] = useState(false)
   const drafts = useStore(state => state.drafts)
   const pages  = useStore(state => state.pages)
   const themes = useStore(state => state.themes)
@@ -49,7 +47,9 @@ export default function SideBar() {
   return (
     <>
       <div className="overflow-y-scroll">
-        <h1 className="text-3xl"><code>%blog</code></h1>
+        <Link to="/">
+          <h1 className="text-3xl"><code>%blog</code></h1>
+        </Link>
         <ul className="bg-white px-4 pt-6">
           <label className="block text-gray-700 font-bold mb-3">Published <code>%blog</code>s</label>
           { pages.sort().map((pub: string, i) => (
@@ -104,12 +104,13 @@ export default function SideBar() {
                 <code>%{theme}</code>
               </div>
               <div className="flex-1 flex justify-end">
-                <button
-                  className="bg-yellow-500 hover:bg-yellow-700 text-white p-2 rounded disabled:opacity-50"
-                  onClick={() => setShowModal(true)}
-                >
-                  <PencilSquareIcon className="w-4 h-4" style={{ color : 'white' }}/>
-                </button>
+                <Link to={`/theme/${theme}`}>
+                  <button
+                    className="bg-yellow-500 hover:bg-yellow-700 text-white p-2 rounded disabled:opacity-50"
+                  >
+                    <PencilSquareIcon className="w-4 h-4" style={{ color : 'white' }}/>
+                  </button>
+                </Link>
                 <button
                   className="bg-red-500 hover:bg-red-700 text-white p-2 rounded disabled:opacity-50 ml-1"
                   onClick={() => handleDeleteTheme(theme)}
@@ -120,14 +121,14 @@ export default function SideBar() {
             </li>
           ))}
         </ul>
-        <button
-          className="bg-blue-500 hover:bg-blue-700 text-white p-2 rounded disabled:opacity-50"
-          onClick={() => setShowModal(true)}
-        >
-          <code>%new-theme</code>
-        </button>
+        <Link to="/theme">
+          <button
+            className="bg-blue-500 hover:bg-blue-700 text-white p-2 rounded disabled:opacity-50"
+          >
+            <code>%new-theme</code>
+          </button>
+        </Link>
       </div>
-      {showModal && <ThemeModal setShowModal={setShowModal}/>}
     </>
   )
 }
