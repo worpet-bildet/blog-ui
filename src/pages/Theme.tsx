@@ -50,6 +50,7 @@ export default function Theme() {
         <button
           className="flex-1 bg-blue-500 hover:bg-blue-700 text-white p-2 rounded w-full disabled:opacity-50"
           onClick={hanldeSaveTheme}
+          disabled={name === ''}
         >
           <code>%save-theme</code>
         </button>
