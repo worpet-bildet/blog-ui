@@ -10,11 +10,13 @@ type BottomBarProps = {
 }
 
 export default function BottomBar({ showPreview, setShowPreview }: BottomBarProps) {
-  const [theme, setTheme]                 = useState('none')
+  const { markdown, pages, activeTheme, allBindings, drafts, themes, getAll, setPreviewCss } = useStore()
+  const [theme, setTheme]                 = useState(activeTheme)
   const [fileName, setFileName]           = useState('')
   const [fileNameError, setFileNameError] = useState('')
   const [showModal, setShowModal]         = useState(false)
-  const { markdown, pages, allBindings, drafts, themes, getAll, setPreviewCss } = useStore()
+
+  useEffect(() => setTheme(activeTheme), [activeTheme])
 
   useEffect(() => {
     setFileName('/' + document.location.pathname.split('/').slice(4).join('/'))  // TODO ugly
@@ -93,7 +95,11 @@ export default function BottomBar({ showPreview, setShowPreview }: BottomBarProp
         </code>
         <p className="text-red-500 text-xs italic">{fileNameError}</p>
       </div>
-      <select className="rounded border-none focus:outline-none" value={theme} onChange={(e) => setTheme(e.target.value)}>
+      <select
+        className="rounded border-none focus:outline-none"
+        value={theme}
+        onChange={(e) => setTheme(e.target.value)}
+      >
         {themes.map((theme, i) => 
           <option value={theme} key={i}>%{theme}</option>
         )}

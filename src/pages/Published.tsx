@@ -6,7 +6,8 @@ import { useStore } from '../state/base'
 
 export default function Published() {
   const match = useMatch('*')
-  const setMarkdown = useStore((state) => state.setMarkdown)
+  const setMarkdown    = useStore((state) => state.setMarkdown)
+  const setActiveTheme = useStore((state) => state.setActiveTheme)
 
   useEffect(() => {
     const getDraft = async () => {
@@ -15,7 +16,11 @@ export default function Published() {
         app: 'blog',
         path: '/md/' + match?.pathname.split('/').slice(2).join('/') // TODO ugly code
       })
+      const activeTheme = await api.scry({
+        app : 'blog', path: '/active-theme/' + match?.pathname.split('/').slice(2).join('/') // TODO ugly code
+      })
       setMarkdown(res)
+      setActiveTheme(activeTheme)
     }
     getDraft()
   }, [match])
