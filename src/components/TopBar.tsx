@@ -10,14 +10,19 @@ import { useStore } from '../state/base'
 type BottomBarProps = {
   showPreview: boolean
   setShowPreview: React.Dispatch<React.SetStateAction<boolean>>
+  fileName: string
+  setFileName: React.Dispatch<React.SetStateAction<string>>
+  setDisabled: React.Dispatch<React.SetStateAction<boolean>>
 }
 
 export default function BottomBar({
   showPreview,
   setShowPreview,
+  fileName,
+  setFileName,
+  setDisabled,
 }: BottomBarProps) {
   const { markdown, pages, allBindings, drafts, getAll } = useStore()
-  const [fileName, setFileName] = useState('')
   const [fileNameError, setFileNameError] = useState('')
 
   useEffect(() => {
@@ -44,19 +49,25 @@ export default function BottomBar({
 
   useEffect(() => {
     if (fileName.charAt(fileName.length - 1) === '/') {
+      setDisabled(true)
       setFileNameError(`cannot end in a slash`)
     } else if (fileName.charAt(0) !== '/') {
+      setDisabled(true)
       setFileNameError(`must start with a slash`)
     } else if (allBindings[fileName]) {
       const inUse = allBindings[fileName]
       if (inUse === 'app: %blog') {
+        setDisabled(false)
         setFileNameError(`replace ${fileName}`)
       } else {
+        setDisabled(true)
         setFileNameError(`${fileName} is in use by ${inUse}`)
       }
     } else if (drafts.includes(fileName)) {
+      setDisabled(false)
       setFileNameError(`replace ${fileName}`)
     } else {
+      setDisabled(false)
       setFileNameError('')
     }
   }, [fileName, pages])

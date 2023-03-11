@@ -9,13 +9,20 @@ export default function Editor() {
   const markdown = useStore((state) => state.markdown)
   const setMarkdown = useStore((state) => state.setMarkdown)
   const previewCss = useStore((state) => state.previewCss)
-
+  const [fileName, setFileName] = useState('')
+  const [disabled, setDisabled] = useState(true)
   const [showPreview, setShowPreview] = useState(false)
 
   return (
     <div className='grid grid-cols-2 h-full grid-rows-12'>
       <div className='col-span-2 grid grid-cols-4 gap-x-4 border-b-4'>
-        <TopBar showPreview={showPreview} setShowPreview={setShowPreview} />
+        <TopBar
+          showPreview={showPreview}
+          setShowPreview={setShowPreview}
+          fileName={fileName}
+          setFileName={setFileName}
+          setDisabled={setDisabled}
+        />
       </div>
       <MDEditor
         value={markdown}
@@ -38,7 +45,7 @@ export default function Editor() {
         />
       )}
       <div className='col-span-2 flex gap-x-4 border-t-4 pt-2 h-14'>
-        <BottomBar />
+        <BottomBar fileName={fileName} disabled={disabled} />
       </div>
     </div>
   )

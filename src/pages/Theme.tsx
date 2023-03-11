@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from 'react'
 import { useParams } from 'react-router-dom'
 import CodeEditor from '@uiw/react-textarea-code-editor'
+import { InboxArrowDownIcon, TrashIcon } from '@heroicons/react/24/outline'
 import { api } from '../state/api'
 import { useStore } from '../state/base'
 
@@ -81,16 +82,22 @@ export default function Theme() {
           placeholder='theme-name'
         />
         <button
-          className='flex-1 bg-blue-500 hover:bg-blue-700 text-white p-2 rounded w-full disabled:opacity-50'
+          className='flex-1 flex items-center justify-center bg-red-500 hover:bg-red-700 text-white p-2 rounded w-full disabled:opacity-50'
           onClick={handleDeleteTheme}
         >
+          <div className='w-5 mr-2'>
+            <TrashIcon></TrashIcon>
+          </div>
           %delete-theme
         </button>
         <button
-          className='flex-1 bg-blue-500 hover:bg-blue-700 text-white p-2 rounded w-full disabled:opacity-50'
+          className='flex-1 flex items-center justify-center bg-green-500 hover:bg-green-700 text-white p-2 rounded w-full disabled:opacity-50'
           onClick={hanldeSaveTheme}
           disabled={name === ''}
         >
+          <div className='w-5 mr-2'>
+            <InboxArrowDownIcon></InboxArrowDownIcon>
+          </div>
           <code>%save-theme</code>
         </button>
       </div>

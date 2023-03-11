@@ -9,17 +9,34 @@ import { api } from '../state/api'
 import { useStore } from '../state/base'
 import Modal from './Modal'
 
-export default function BottomBar() {
-  const { markdown, activeTheme, themes, pages, drafts, getAll } = useStore()
-  const [theme, setTheme] = useState(activeTheme)
-  const [fileName, setFileName] = useState('')
+type BottomBarProps = {
+  disabled: boolean
+  fileName: string
+}
+
+export default function BottomBar({ fileName, disabled }: BottomBarProps) {
+  const {
+    markdown,
+    pages,
+    activeTheme,
+    allBindings,
+    drafts,
+    themes,
+    getAll,
+    setPreviewCss,
+    setActiveTheme,
+  } = useStore()
+
   const [showModal, setShowModal] = useState(false)
 
-  useEffect(() => setTheme(activeTheme), [activeTheme])
-
   useEffect(() => {
-    setFileName('/' + document.location.pathname.split('/').slice(4).join('/')) // TODO ugly
-  }, [document.location.pathname])
+    if (themes.length > 0 && activeTheme === '') setActiveTheme(themes[0])
+    async function getTheme() {
+      const css = await api.scry({ app: 'blog', path: `/theme/${activeTheme}` })
+      setPreviewCss(css)
+    }
+    getTheme()
+  }, [activeTheme, themes])
 
   const handlePublish = useCallback(
     async (e: React.SyntheticEvent) => {
@@ -32,14 +49,14 @@ export default function BottomBar() {
             path: fileName,
             html: marked.parse(markdown),
             md: markdown,
-            theme: theme,
+            theme: activeTheme,
           },
         },
       })
       getAll()
       setShowModal(true)
     },
-    [fileName, markdown, theme]
+    [fileName, markdown, activeTheme]
   )
 
   const handleDeleteDraft = useCallback(async (toDelete: string) => {
@@ -70,8 +87,8 @@ export default function BottomBar() {
         %theme:
         <select
           className='rounded border-none focus:outline-none'
-          value={theme}
-          onChange={(e) => setTheme(e.target.value)}
+          value={activeTheme}
+          onChange={(e) => setActiveTheme(e.target.value)}
         >
           {themes.map((theme, i) => (
             <option value={theme} key={i}>
@@ -92,7 +109,7 @@ export default function BottomBar() {
       </button>
       <button
         className='flex-1 flex items-center justify-center text-white bg-orange-500 hover:bg-orange-700 rounded disabled:opacity-50'
-        disabled={!fileName}
+        disabled={!fileName || disabled}
         onClick={() => handleUnpublish(fileName)}
       >
         <div className='w-5 mr-2'>
@@ -102,7 +119,7 @@ export default function BottomBar() {
       </button>
       <button
         className='flex-1 flex items-center justify-center text-white bg-green-500 hover:bg-green-700 rounded disabled:opacity-50'
-        disabled={!fileName}
+        disabled={!fileName || disabled}
         onClick={handlePublish}
       >
         <div className='w-5 mr-2'>
