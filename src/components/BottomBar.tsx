@@ -10,25 +10,24 @@ type BottomBarProps = {
 }
 
 export default function BottomBar({ showPreview, setShowPreview }: BottomBarProps) {
-  const { markdown, pages, activeTheme, allBindings, drafts, themes, getAll, setPreviewCss } = useStore()
-  const [theme, setTheme]                 = useState(activeTheme)
+  const { markdown, pages, activeTheme, allBindings, drafts, themes, getAll, setPreviewCss, setActiveTheme } = useStore()
   const [fileName, setFileName]           = useState('')
   const [fileNameError, setFileNameError] = useState('')
+  const [disabled, setDisabled]           = useState(true)
   const [showModal, setShowModal]         = useState(false)
-
-  useEffect(() => setTheme(activeTheme), [activeTheme])
 
   useEffect(() => {
     setFileName('/' + document.location.pathname.split('/').slice(4).join('/'))  // TODO ugly
   }, [document.location.pathname])
 
   useEffect(() => {
+    if (themes.length > 0 && activeTheme === '') setActiveTheme(themes[0])
     async function getTheme() {
-      const css = await api.scry({ app : 'blog', path: `/theme/${theme}`})
+      const css = await api.scry({ app : 'blog', path: `/theme/${activeTheme}`})
       setPreviewCss(css)
     }
     getTheme()
-  }, [theme])
+  }, [activeTheme, themes])
 
   const handlePublish = useCallback(
     async (e : React.SyntheticEvent) => {
@@ -41,11 +40,11 @@ export default function BottomBar({ showPreview, setShowPreview }: BottomBarProp
             "path": fileName,
             "html": marked.parse(markdown),
             "md": markdown,
-            "theme": theme
+            "theme": activeTheme
       }}})
       getAll()
       setShowModal(true)
-  }, [fileName, markdown, theme])
+  }, [fileName, markdown, activeTheme])
 
   const handleSaveDraft = useCallback(
     async (e : React.SyntheticEvent) => {
@@ -63,19 +62,26 @@ export default function BottomBar({ showPreview, setShowPreview }: BottomBarProp
 
   useEffect(() => {
     if (fileName.charAt(fileName.length - 1) === '/') {
+      setDisabled(true)
       setFileNameError(`cannot end in a slash`)
     } else if (fileName.charAt(0) !== '/'){
+      setDisabled(true)
       setFileNameError(`must start with a slash`)
     } else if (allBindings[fileName]) {
       const inUse = allBindings[fileName]
-      if (inUse === 'desk: %blog') {
+      console.log('ue', inUse)
+      if (inUse === 'app: %blog') {
+        setDisabled(false)
         setFileNameError(`you will overwrite ${fileName}`)
       } else {
+        setDisabled(true)
         setFileNameError(`${fileName} is in use by ${inUse}`)
       }
     } else if (drafts.includes(fileName)) {
+      setDisabled(false)
       setFileNameError(`you will overwrite ${fileName}`)
     } else {
+      setDisabled(false)
       setFileNameError('')
     }
   }, [fileName, pages])
@@ -97,8 +103,8 @@ export default function BottomBar({ showPreview, setShowPreview }: BottomBarProp
       </div>
       <select
         className="rounded border-none focus:outline-none"
-        value={theme}
-        onChange={(e) => setTheme(e.target.value)}
+        value={activeTheme}
+        onChange={(e) => setActiveTheme(e.target.value)}
       >
         {themes.map((theme, i) => 
           <option value={theme} key={i}>%{theme}</option>
@@ -106,14 +112,14 @@ export default function BottomBar({ showPreview, setShowPreview }: BottomBarProp
       </select>
       <button
         className="flex-1 bg-blue-500 hover:bg-blue-700 text-white p-2 rounded w-full disabled:opacity-50"
-        disabled={!fileName}
+        disabled={!fileName || disabled}
         onClick={handleSaveDraft}
       >
         <code>%save-draft</code>
       </button>
       <button
         className="flex-1 bg-blue-500 hover:bg-blue-700 text-white p-2 rounded w-full disabled:opacity-50"
-        disabled={!fileName}
+        disabled={!fileName || disabled}
         onClick={handlePublish}
       >
         <code>%publish</code>
