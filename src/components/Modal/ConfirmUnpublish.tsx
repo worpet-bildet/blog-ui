@@ -1,5 +1,4 @@
-import { Modal } from './'
-import ModalProps from './ModalProps'
+import { Modal, ModalProps } from './Modal'
 
 interface ConfirmUnpublishProps extends ModalProps {
   fileName: string

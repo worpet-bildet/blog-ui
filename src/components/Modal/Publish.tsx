@@ -1,9 +1,10 @@
 import { useState } from 'react'
-import { Modal } from './'
-import ModalProps from './ModalProps'
+import { Modal, ModalProps } from './Modal'
+
 interface PublishModalProps extends ModalProps {
   fileName: string
 }
+
 export default function Share({ setShowModal, fileName }: PublishModalProps) {
   const [value, setValue] = useState(
     `AAAAH I'M GONNA %blog : ${window.location.origin}${fileName}`

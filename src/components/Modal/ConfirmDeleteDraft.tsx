@@ -1,5 +1,4 @@
-import { Modal } from './'
-import ModalProps from './ModalProps'
+import { Modal, ModalProps } from './Modal'
 
 interface ConfirmDeleteDraftProps extends ModalProps {
   fileName: string

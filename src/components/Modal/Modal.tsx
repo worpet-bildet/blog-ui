@@ -1,6 +1,10 @@
 import { ReactNode } from 'react'
 
-export default function Modal({ children }: { children: ReactNode }) {
+export interface ModalProps {
+  setShowModal: React.Dispatch<React.SetStateAction<boolean>>
+}
+
+export function Modal({ children }: { children: ReactNode }) {
   return (
     <>
       <div className='fixed inset-0 z-10 overflow-y-auto backdrop-blur-md'>
