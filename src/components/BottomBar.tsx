@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect } from 'react'
+import { useState, useCallback, useEffect, SetStateAction } from 'react'
 import { marked } from 'marked'
 import {
   TrashIcon,
@@ -7,7 +7,7 @@ import {
 } from '@heroicons/react/24/outline'
 import { api } from '../state/api'
 import { useStore } from '../state/base'
-import Modal from './Modal'
+import { Publish, ConfirmDeleteDraft, ConfirmUnpublish } from './Modal'
 
 type BottomBarProps = {
   disabled: boolean
@@ -24,7 +24,9 @@ export default function BottomBar({ fileName, disabled }: BottomBarProps) {
     setActiveTheme,
   } = useStore()
 
-  const [showModal, setShowModal] = useState(false)
+  const [showDeleteDraftModal, setShowDeleteDraftModal] = useState(false)
+  const [showUnpublishModal, setShowUnpublishModal] = useState(false)
+  const [showPublishModal, setShowPublishModal] = useState(false)
 
   useEffect(() => {
     if (themes.length > 0 && activeTheme === '') setActiveTheme(themes[0])
@@ -51,7 +53,7 @@ export default function BottomBar({ fileName, disabled }: BottomBarProps) {
         },
       })
       getAll()
-      setShowModal(true)
+      setShowPublishModal(true)
     },
     [fileName, markdown, activeTheme]
   )
@@ -66,6 +68,7 @@ export default function BottomBar({ fileName, disabled }: BottomBarProps) {
         },
       },
     })
+    setShowDeleteDraftModal(false)
     getAll()
   }, [])
 
@@ -75,6 +78,7 @@ export default function BottomBar({ fileName, disabled }: BottomBarProps) {
       mark: 'blog-action',
       json: { unpublish: { path: toUnpublish } },
     })
+    setShowUnpublishModal(false)
     getAll()
   }, [])
 
@@ -97,7 +101,9 @@ export default function BottomBar({ fileName, disabled }: BottomBarProps) {
       <button
         className='flex-1 flex items-center justify-center text-red-500 hover:text-white hover:bg-red-500 border rounded disabled:opacity-50'
         disabled={!fileName}
-        onClick={() => handleDeleteDraft(fileName)}
+        onClick={() => {
+          setShowDeleteDraftModal(true)
+        }}
       >
         <div className='w-5 mr-2'>
           <TrashIcon />
@@ -107,7 +113,9 @@ export default function BottomBar({ fileName, disabled }: BottomBarProps) {
       <button
         className='flex-1 flex items-center justify-center text-white bg-orange-500 hover:bg-orange-700 rounded disabled:opacity-50'
         disabled={!fileName || disabled}
-        onClick={() => handleUnpublish(fileName)}
+        onClick={() => {
+          setShowUnpublishModal(true)
+        }}
       >
         <div className='w-5 mr-2'>
           <PencilSquareIcon />
@@ -124,8 +132,22 @@ export default function BottomBar({ fileName, disabled }: BottomBarProps) {
         </div>
         <code>publish %blog</code>
       </button>
-      {showModal && (
-        <Modal justPublished={fileName} setShowModal={setShowModal} />
+      {showDeleteDraftModal && (
+        <ConfirmDeleteDraft
+          fileName={fileName}
+          setShowModal={setShowDeleteDraftModal}
+          onConfirm={() => handleDeleteDraft(fileName)}
+        />
+      )}
+      {showUnpublishModal && (
+        <ConfirmUnpublish
+          fileName={fileName}
+          setShowModal={setShowUnpublishModal}
+          onConfirm={() => handleUnpublish(fileName)}
+        />
+      )}
+      {showPublishModal && (
+        <Publish fileName={fileName} setShowModal={setShowPublishModal} />
       )}
     </>
   )
