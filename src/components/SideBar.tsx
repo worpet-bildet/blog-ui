@@ -1,8 +1,5 @@
-import { useCallback } from 'react'
 import { Link, useMatch } from 'react-router-dom'
-import { PencilSquareIcon, TrashIcon } from '@heroicons/react/24/solid'
 import { useStore } from '../state/base'
-import { api } from '../state/api'
 
 interface SideBarProps {
   onToggle: any
@@ -12,7 +9,6 @@ export default function SideBar({ onToggle }: SideBarProps) {
   const drafts = useStore((state) => state.drafts)
   const pages = useStore((state) => state.pages)
   const themes = useStore((state) => state.themes)
-  const getAll = useStore((state) => state.getAll)
   const match = useMatch('*')
 
   type SidebarItemProps = {

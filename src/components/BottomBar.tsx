@@ -17,10 +17,7 @@ type BottomBarProps = {
 export default function BottomBar({ fileName, disabled }: BottomBarProps) {
   const {
     markdown,
-    pages,
     activeTheme,
-    allBindings,
-    drafts,
     themes,
     getAll,
     setPreviewCss,
