@@ -7,7 +7,7 @@ import {
 import { api } from '../state/api'
 import { useStore } from '../state/base'
 
-type BottomBarProps = {
+type TopBarProps = {
   showPreview: boolean
   setShowPreview: React.Dispatch<React.SetStateAction<boolean>>
   fileName: string
@@ -15,13 +15,13 @@ type BottomBarProps = {
   setDisabled: React.Dispatch<React.SetStateAction<boolean>>
 }
 
-export default function BottomBar({
+export default function TopBar({
   showPreview,
   setShowPreview,
   fileName,
   setFileName,
   setDisabled,
-}: BottomBarProps) {
+}: TopBarProps) {
   const { markdown, pages, allBindings, drafts, getAll } = useStore()
   const [fileNameError, setFileNameError] = useState('')
 
