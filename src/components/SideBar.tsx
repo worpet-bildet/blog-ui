@@ -215,7 +215,7 @@ export default function SideBar() {
         </li>
         {open &&
           item.children.map((p) => (
-            <div className='flex flex-row'>
+            <div className='flex flex-row' key={p}>
               <code className='pl-1'>-</code>&nbsp;
               <SidebarItem
                 item={{ path: p, children: [] }}
