@@ -146,6 +146,7 @@ export default function SideBar() {
   const sortSidebar = (a: SidebarEntry, b: SidebarEntry) => {
     if (hasChildren(a) && !hasChildren(b)) return -1
     if (!hasChildren(a) && hasChildren(b)) return 1
+    if (a.path < b.path) return -1
     return 0
   }
 
@@ -161,7 +162,7 @@ export default function SideBar() {
     return (
       <>
         <li
-          className={`flex cursor-pointer pointer-events-auto justify-between mb-1 text-xs hover:text-blue-600 py-1 ${
+          className={`flex w-full cursor-pointer pointer-events-auto justify-between mb-1 text-xs hover:text-blue-600 py-1 ${
             match?.pathname === linkto ? 'bg-gray-100' : ''
           } ${
             hasChildren(item)
@@ -176,8 +177,8 @@ export default function SideBar() {
           onMouseLeave={() => setHovered(false)}
         >
           {!hasChildren(item) && (
-            <>
-              <div className='text-left flex-1 my-auto truncate'>
+            <div className='flex flex-row w-full justify-between'>
+              <div className='text-left flex-1 my-auto truncate w-full'>
                 <code>{item.path}</code>
               </div>
               {linkbase !== '/theme/' && hovered && (
@@ -195,7 +196,7 @@ export default function SideBar() {
                   )}
                 </div>
               )}
-            </>
+            </div>
           )}
           {hasChildren(item) && (
             <div
@@ -215,7 +216,7 @@ export default function SideBar() {
         </li>
         {open &&
           item.children.map((p) => (
-            <div className='flex flex-row' key={p}>
+            <div className='flex flex-row w-full' key={p}>
               <code className='pl-1'>-</code>&nbsp;
               <SidebarItem
                 item={{ path: p, children: [] }}
