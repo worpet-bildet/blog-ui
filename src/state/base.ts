@@ -18,6 +18,8 @@ export interface State {
   getAll:         () => Promise<void>
   getDraft:       (s: string) => Promise<void>
   getPage:        (s: string) => Promise<void>
+  saveDraft:      (s: string, t: string) => Promise<void>
+  saveTheme:      (s: string, t: string) => Promise<void>
 }
 
 export const useStore = create<State>()((set) => ({
@@ -48,4 +50,28 @@ export const useStore = create<State>()((set) => ({
     let page  = await api.scry({ app : 'blog', path: `/md${s}`})
     set({ markdown : page })
   },
+  saveDraft: async (fileName: string, markdown: string) => {
+    await api.poke({
+      app: 'blog',
+      mark: 'blog-action',
+      json: {
+        'save-draft': {
+          path: fileName,
+          md: markdown,
+        },
+      },
+    })
+  },
+  saveTheme: async (theme: string, css: string) => {
+    await api.poke({
+      app: 'blog',
+      mark: 'blog-action',
+      json: {
+        'save-theme': {
+          theme: theme,
+          css: css,
+        },
+      },
+    })
+  }
 }))

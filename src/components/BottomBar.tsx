@@ -36,6 +36,7 @@ export default function BottomBar({
     setPreviewCss,
     setActiveTheme,
     setIsFocusMode,
+    saveDraft,
     pages,
     allBindings,
     drafts,
@@ -85,16 +86,7 @@ export default function BottomBar({
   const handleSaveDraft = useCallback(
     async (e: React.SyntheticEvent) => {
       e.preventDefault()
-      await api.poke({
-        app: 'blog',
-        mark: 'blog-action',
-        json: {
-          'save-draft': {
-            path: fileName,
-            md: markdown,
-          },
-        },
-      })
+      saveDraft(fileName, markdown)
       getAll()
     },
     [fileName, markdown]

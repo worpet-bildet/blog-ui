@@ -10,7 +10,7 @@ export default function Theme() {
   const [name, setName] = useState(theme ? theme : '')
   const [css, setCss] = useState('')
   const [showDeleteThemeModal, setShowDeleteThemeModal] = useState(false)
-  const getAll = useStore((state) => state.getAll)
+  const { getAll, saveTheme } = useStore()
 
   useEffect(() => {
     async function getCss() {
@@ -24,16 +24,7 @@ export default function Theme() {
   const handleSaveTheme = useCallback(
     async (e: React.SyntheticEvent) => {
       e.preventDefault()
-      await api.poke({
-        app: 'blog',
-        mark: 'blog-action',
-        json: {
-          'save-theme': {
-            theme: name,
-            css: css,
-          },
-        },
-      })
+      saveTheme(name, css)
       getAll()
     },
     [name, css]

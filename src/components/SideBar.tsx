@@ -21,7 +21,7 @@ export default function SideBar() {
   const drafts = useStore((state) => state.drafts)
   const pages = useStore((state) => state.pages)
   const themes = useStore((state) => state.themes)
-  const { getAll } = useStore()
+  const { getAll, saveDraft, saveTheme } = useStore()
   const navigate = useNavigate()
   const [fileName, setFileName] = useState('')
   const [showDeleteDraftModal, setShowDeleteDraftModal] = useState(false)
@@ -75,16 +75,7 @@ export default function SideBar() {
   const handleNewDraft = useCallback(async () => {
     // create a new name for the draft
     const newDraftName = findNextNewFileName('/new-draft', drafts)
-    await api.poke({
-      app: 'blog',
-      mark: 'blog-action',
-      json: {
-        'save-draft': {
-          path: newDraftName,
-          md: '',
-        },
-      },
-    })
+    saveDraft(newDraftName, '')
     getAll()
     navigate(`/draft${newDraftName}`)
   }, [drafts])
@@ -92,16 +83,7 @@ export default function SideBar() {
   const handleNewTheme = useCallback(async () => {
     // create a new name for the draft
     const newThemeName = findNextNewFileName('new-theme', themes)
-    await api.poke({
-      app: 'blog',
-      mark: 'blog-action',
-      json: {
-        'save-theme': {
-          theme: newThemeName,
-          css: 'html {\n\tcolor: hotpink;\n}',
-        },
-      },
-    })
+    saveTheme(newThemeName, 'html {\n\tcolor: hotpink;\n}')
     getAll()
     navigate(`/theme/${newThemeName}`)
   }, [drafts])
