@@ -1,24 +1,19 @@
-import { ReactNode, useState } from 'react'
+import { ReactNode } from 'react'
+import { useStore } from '../state/base'
 import SideBar from '../components/SideBar'
 
 export default function Layout({ children }: { children: ReactNode }) {
-  const [isSidebarOpen, setIsSidebarOpen] = useState(true)
+  const isFocusMode = useStore((state) => state.isFocusMode)
 
   return (
-    <main className='p-4 h-full'>
+    <main className='h-full bg-gray'>
       <div className='grid grid-rows-1 lg:grid-cols-12 md:grid-cols-1 gap-4 h-full'>
-        {isSidebarOpen ? (
-          <div className='border-r-[1px] border-solid col-span-3'>
-            <SideBar onToggle={() => setIsSidebarOpen(!isSidebarOpen)} />
+        {!isFocusMode ? (
+          <div className='col-span-3'>
+            <SideBar />
           </div>
-        ) : (
-          <div className='border-r-[1px] border-solid col-span-1'>
-            <button onClick={() => setIsSidebarOpen(!isSidebarOpen)}>
-              {'>>'}
-            </button>
-          </div>
-        )}
-        <div className={`${isSidebarOpen ? 'col-span-9' : 'col-span-11'}`}>
+        ) : null}
+        <div className={`${!isFocusMode ? 'col-span-9' : 'col-span-12'}`}>
           {children}
         </div>
       </div>

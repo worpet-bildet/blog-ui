@@ -5,21 +5,19 @@ import {
   ArchiveBoxXMarkIcon,
   ChevronDownIcon,
   ChevronUpIcon,
+  PlusCircleIcon,
 } from '@heroicons/react/24/outline'
 import { useStore } from '../state/base'
+import Logo from './Logo'
 import { ConfirmDeleteDraft, ConfirmUnpublish } from './Modal'
 import { api } from '../state/api'
-
-interface SideBarProps {
-  onToggle: any
-}
 
 type SidebarEntry = {
   path: string
   children: string[]
 }
 
-export default function SideBar({ onToggle }: SideBarProps) {
+export default function SideBar() {
   const drafts = useStore((state) => state.drafts)
   const pages = useStore((state) => state.pages)
   const themes = useStore((state) => state.themes)
@@ -63,6 +61,51 @@ export default function SideBar({ onToggle }: SideBarProps) {
 
   const match = useMatch('*')
 
+  const findNextNewFileName = (
+    newFileName: string,
+    files: Array<string>,
+    i?: number
+  ): string => {
+    if (files.includes(i ? `${newFileName}-${i}` : newFileName)) {
+      return findNextNewFileName(newFileName, files, i ? i + 1 : 1)
+    }
+    return i ? `${newFileName}-${i}` : `${newFileName}`
+  }
+
+  const handleNewDraft = useCallback(async () => {
+    // create a new name for the draft
+    const newDraftName = findNextNewFileName('/new-draft', drafts)
+    await api.poke({
+      app: 'blog',
+      mark: 'blog-action',
+      json: {
+        'save-draft': {
+          path: newDraftName,
+          md: '',
+        },
+      },
+    })
+    getAll()
+    navigate(`/draft${newDraftName}`)
+  }, [drafts])
+
+  const handleNewTheme = useCallback(async () => {
+    // create a new name for the draft
+    const newThemeName = findNextNewFileName('new-theme', themes)
+    await api.poke({
+      app: 'blog',
+      mark: 'blog-action',
+      json: {
+        'save-theme': {
+          theme: newThemeName,
+          css: 'html {\n\tcolor: hotpink;\n}',
+        },
+      },
+    })
+    getAll()
+    navigate(`/theme/${newThemeName}`)
+  }, [drafts])
+
   const handleDeleteDraft = useCallback(async (toDelete: string) => {
     await api.poke({
       app: 'blog',
@@ -98,6 +141,14 @@ export default function SideBar({ onToggle }: SideBarProps) {
     }
   }
 
+  const hasChildren = (entry: SidebarEntry) => entry.children.length > 1
+
+  const sortSidebar = (a: SidebarEntry, b: SidebarEntry) => {
+    if (hasChildren(a) && !hasChildren(b)) return -1
+    if (!hasChildren(a) && hasChildren(b)) return 1
+    return 0
+  }
+
   type SidebarItemProps = {
     linkbase: string
     item: SidebarEntry
@@ -106,28 +157,32 @@ export default function SideBar({ onToggle }: SideBarProps) {
   const SidebarItem = ({ linkbase, item }: SidebarItemProps) => {
     let linkto = `${linkbase}${item.path}`
     const [open, setOpen] = useState(false)
-    const hasChildren = item.children.length > 1
+    const [hovered, setHovered] = useState(false)
     return (
       <>
         <li
-          className={`flex cursor-pointer pointer-events-auto justify-between mb-1 text-blue-600 visited:text-purple-600 text-xs hover:bg-gray-100 p-2 ${
+          className={`flex cursor-pointer pointer-events-auto justify-between mb-1 text-xs hover:text-blue-600 py-1 ${
             match?.pathname === linkto ? 'bg-gray-100' : ''
           } ${
-            hasChildren ? 'flex-col justify-center' : 'flex-row  items-center'
+            hasChildren(item)
+              ? 'flex-col justify-center'
+              : 'flex-row  items-center'
           }`}
           onClick={() => {
-            if (hasChildren) return
+            if (hasChildren(item)) return
             navigate(linkto)
           }}
+          onMouseEnter={() => setHovered(true)}
+          onMouseLeave={() => setHovered(false)}
         >
-          {!hasChildren && (
+          {!hasChildren(item) && (
             <>
               <div className='text-left flex-1 my-auto truncate'>
                 <code>{item.path}</code>
               </div>
-              {linkbase !== '/theme/' && (
+              {linkbase !== '/theme/' && hovered && (
                 <div
-                  className='w-6 p-1 cursor-pointer rounded-sm text-red-500 hover:text-white hover:bg-red-500 '
+                  className='w-4 cursor-pointer rounded-sm hover:text-red-500'
                   onClick={() => {
                     showModal(linkbase)
                     setFileName(item.path)
@@ -142,17 +197,17 @@ export default function SideBar({ onToggle }: SideBarProps) {
               )}
             </>
           )}
-          {hasChildren && (
+          {hasChildren(item) && (
             <div
               className='flex flex-row w-full justify-between pointer-events-auto'
               onClick={() => {
                 setOpen(!open)
               }}
             >
-              <div className='text-left flex-1 my-auto truncate'>
+              <div className='text-left font-bold flex-1 my-auto truncate'>
                 <code>{item.path}</code>
               </div>
-              <div className='w-6'>
+              <div className='w-4'>
                 {open ? <ChevronUpIcon /> : <ChevronDownIcon />}
               </div>
             </div>
@@ -160,45 +215,58 @@ export default function SideBar({ onToggle }: SideBarProps) {
         </li>
         {open &&
           item.children.map((p) => (
-            <SidebarItem
-              item={{ path: p, children: [] }}
-              linkbase={linkbase}
-              key={p}
-            />
+            <div className='flex flex-row'>
+              <code className='pl-1'>-</code>&nbsp;
+              <SidebarItem
+                item={{ path: p, children: [] }}
+                linkbase={linkbase}
+                key={p}
+              />
+            </div>
           ))}
       </>
     )
   }
 
   return (
-    <div className='h-full overflow-y-scroll pr-4'>
-      <div className='flex flex-row items-center justify-between w-full'>
+    <div className='h-full p-4 pr-0'>
+      <div className='flex flex-row items-center justify-between w-full pb-4'>
         <Link to='/'>
-          <h1 className='text-3xl'>
-            <code>%blog</code>
-          </h1>
+          <Logo />
         </Link>
-        <button onClick={onToggle}>{'<<'}</button>
       </div>
-      <ul className='bg-white pt-6'>
-        <label className='block text-gray-700 font-bold mb-3'>
-          Published <code>%blog</code>s
+      <ul className='pb-6'>
+        <label className='block font-bold mb-3 font-sans font-extrabold'>
+          Published
         </label>
-        {nestedPages.sort().map((pub: SidebarEntry, i) => (
+        {nestedPages.sort(sortSidebar).map((pub: SidebarEntry, i) => (
           <SidebarItem linkbase={`/published`} item={pub} key={i}></SidebarItem>
         ))}
       </ul>
-      <ul className='bg-white pt-6'>
-        <label className='block text-gray-700 font-bold mb-3'>
-          <code>%draft</code>s
+      <ul className='pb-6'>
+        <label className='block font-bold mb-3 font-sans font-extrabold'>
+          Drafts
         </label>
-        {nestedDrafts.sort().map((draft: SidebarEntry, i) => (
+        {nestedDrafts.sort(sortSidebar).map((draft: SidebarEntry, i) => (
           <SidebarItem linkbase={`/draft`} item={draft} key={i}></SidebarItem>
         ))}
+        <li>
+          <div
+            className='flex flex-row items-center text-xs hover:text-blue-600 cursor-pointer'
+            onClick={handleNewDraft}
+          >
+            <div className='w-5 mr-1'>
+              <PlusCircleIcon />
+            </div>
+            <div>
+              <code>new draft</code>
+            </div>
+          </div>
+        </li>
       </ul>
-      <ul className='bg-white pt-6'>
-        <label className='block text-gray-700 font-bold mb-3'>
-          <code>%theme</code>s
+      <ul className='pb-6'>
+        <label className='block font-bold mb-3 font-sans font-extrabold'>
+          Themes
         </label>
         {themes.sort().map((theme: string, i) => (
           <SidebarItem
@@ -207,12 +275,20 @@ export default function SideBar({ onToggle }: SideBarProps) {
             key={i}
           ></SidebarItem>
         ))}
+        <li>
+          <div
+            className='flex flex-row items-center text-xs hover:text-blue-600 cursor-pointer'
+            onClick={handleNewTheme}
+          >
+            <div className='w-5 mr-1'>
+              <PlusCircleIcon />
+            </div>
+            <div>
+              <code>new theme</code>
+            </div>
+          </div>
+        </li>
       </ul>
-      <Link to='/theme'>
-        <button className='bg-blue-500 hover:bg-blue-700 text-white p-2 rounded disabled:opacity-50'>
-          <code>%new-theme</code>
-        </button>
-      </Link>
       {showDeleteDraftModal && (
         <ConfirmDeleteDraft
           fileName={fileName}

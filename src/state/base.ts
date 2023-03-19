@@ -6,6 +6,7 @@ export interface State {
   markdown:       string
   previewCss:     string
   activeTheme:    string
+  isFocusMode:      boolean,
   allBindings:    {[key: string]: string}
   pages:          string[]
   drafts:         string[]
@@ -13,6 +14,7 @@ export interface State {
   setMarkdown:    (s: string) => void
   setPreviewCss:  (s: string) => void
   setActiveTheme: (s: string) => void
+  setIsFocusMode:   (b: boolean) => void
   getAll:         () => Promise<void>
   getDraft:       (s: string) => Promise<void>
   getPage:        (s: string) => Promise<void>
@@ -22,6 +24,7 @@ export const useStore = create<State>()((set) => ({
   markdown: defaultText,
   previewCss: '',
   activeTheme: '',
+  isFocusMode: false,
   allBindings: {},
   pages: [],
   drafts: [],
@@ -29,6 +32,7 @@ export const useStore = create<State>()((set) => ({
   setMarkdown: (s) => set(() => ({ markdown: s })),
   setPreviewCss: (s) => set(() => ({ previewCss: s })),
   setActiveTheme: (s) => (set(() => ({ activeTheme: s}))),
+  setIsFocusMode: (b) => (set(() => ({ isFocusMode: b}))),
   getAll: async () => {
     let pages       = await api.scry({ app: 'blog', path: '/pages' })
     let drafts      = await api.scry({ app: 'blog', path: '/drafts' })
