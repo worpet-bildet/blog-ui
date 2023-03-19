@@ -9,7 +9,7 @@ export default function Layout({ children }: { children: ReactNode }) {
     <main className='h-full bg-gray'>
       <div className='grid grid-rows-1 lg:grid-cols-12 md:grid-cols-1 gap-4 h-full'>
         {!isFocusMode ? (
-          <div className='col-span-3'>
+          <div className='col-span-3 overflow-y-scroll'>
             <SideBar />
           </div>
         ) : null}
