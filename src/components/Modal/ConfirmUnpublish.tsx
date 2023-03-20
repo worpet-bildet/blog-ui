@@ -29,7 +29,7 @@ export default function ConfirmUnpublish({
             setShowModal(false)
           }}
         >
-          <code>%yeet n delete</code>
+          <code>%delete</code>
         </button>
       </div>
     </Modal>

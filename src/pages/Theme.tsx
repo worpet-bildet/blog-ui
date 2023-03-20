@@ -91,7 +91,7 @@ export default function Theme() {
           %delete-theme
         </button>
         <button
-          className='flex-1 flex items-center justify-center bg-green-500 hover:bg-green-700 text-white p-2 rounded w-full disabled:opacity-50'
+          className='flex-1 flex items-center justify-center bg-blue-500 hover:bg-blue-700 text-white p-2 rounded w-full disabled:opacity-50'
           onClick={hanldeSaveTheme}
           disabled={name === ''}
         >
