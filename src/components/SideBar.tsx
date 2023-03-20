@@ -6,6 +6,7 @@ import {
   ChevronDownIcon,
   ChevronUpIcon,
   PlusCircleIcon,
+  RssIcon,
 } from '@heroicons/react/24/outline'
 import { useStore } from '../state/base'
 import Logo from './Logo'
@@ -163,21 +164,39 @@ export default function SideBar() {
               <div className='text-left flex-1 my-auto truncate w-full'>
                 <code>{item.path}</code>
               </div>
-              {linkbase !== '/theme/' && hovered && (
-                <div
-                  className='w-4 cursor-pointer rounded-sm hover:text-red-500'
-                  onClick={() => {
-                    showModal(linkbase)
-                    setFileName(item.path)
-                  }}
-                >
-                  {linkbase === '/published' ? (
-                    <ArchiveBoxXMarkIcon />
-                  ) : (
+              {linkbase !== '/theme/' &&
+                hovered &&
+                (linkbase === '/published' ? (
+                  <>
+                    <div
+                      className='w-4 cursor-pointer rounded-sm hover:text-red-500'
+                      onClick={() => {
+                        window.open(item.path, '_blank')
+                      }}
+                    >
+                      <RssIcon />
+                    </div>
+                    <div
+                      className='w-4 cursor-pointer rounded-sm hover:text-blue-500'
+                      onClick={() => {
+                        showModal(linkbase)
+                        setFileName(item.path)
+                      }}
+                    >
+                      <ArchiveBoxXMarkIcon />
+                    </div>
+                  </>
+                ) : (
+                  <div
+                    className='w-4 cursor-pointer rounded-sm hover:text-red-500'
+                    onClick={() => {
+                      showModal(linkbase)
+                      setFileName(item.path)
+                    }}
+                  >
                     <TrashIcon />
-                  )}
-                </div>
-              )}
+                  </div>
+                ))}
             </div>
           )}
           {hasChildren(item) && (
