@@ -12,12 +12,10 @@ export default function Share({ setShowModal, fileName }: PublishModalProps) {
   return (
     <Modal>
       <h4 className='text-md font-bold'>
-        Success! Do you want to share your <code>%blog</code> via{' '}
-        <code>%rumors</code>?
+        Success! Do you want to share your post via %rumors?
       </h4>
       <p className='text-xs mb-4 text-gray-500'>
-        (download <code>%pals</code> and <code>%rumors</code> from{' '}
-        <code>~paldev</code>)
+        (download %pals and %rumors from paldev)
       </p>
       <form
         method='post'
@@ -37,7 +35,7 @@ export default function Share({ setShowModal, fileName }: PublishModalProps) {
             className='flex-1 bg-blue-500 hover:bg-blue-700 text-white p-2 rounded w-full'
             type='submit'
           >
-            <code>%send</code>
+            Send
           </button>
           <button
             className='flex-1 bg-red-500 hover:bg-red-700 text-white p-2 rounded w-full'
@@ -46,7 +44,7 @@ export default function Share({ setShowModal, fileName }: PublishModalProps) {
               setShowModal(false)
             }}
           >
-            <code>%close</code>
+            Close
           </button>
         </div>
       </form>

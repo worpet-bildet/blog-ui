@@ -50,7 +50,7 @@ export default function Theme() {
     >
       <div className='col-span-2'>
         <h1 className='text-3xl'>
-          <code>%theme-editor</code>
+          Theme Editor
         </h1>
         <p className='text-gray-700'>put your css below to add a theme</p>
         <div className='drop-shadow-2xl pt-2' style={{ height: '90%' }}>

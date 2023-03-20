@@ -31,7 +31,7 @@ export default function Editor() {
         <iframe
           title='preview'
           srcDoc={`${marked.parse(markdown)}<style>${previewCss}</style>`}
-          className='col-span-1 w-full h-full row-span-10'
+          className='col-span-1 w-full h-full row-span-10 rounded-2xl'
         />
       )}
       <div className='col-span-2 pt-2'>

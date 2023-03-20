@@ -20,7 +20,7 @@ export default function ConfirmDeleteTheme({
           className='flex-1 bg-blue-500 hover:bg-blue-700 text-white p-2 rounded w-full'
           onClick={() => setShowModal(false)}
         >
-          <code>%cancel</code>
+          Cancel
         </button>
         <button
           className='flex-1 bg-red-500 hover:bg-red-700 text-white p-2 rounded w-full'
@@ -29,7 +29,7 @@ export default function ConfirmDeleteTheme({
             setShowModal(false)
           }}
         >
-          <code>%yeet n delete</code>
+          Delete
         </button>
       </div>
     </Modal>

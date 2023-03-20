@@ -172,12 +172,12 @@ export default function BottomBar({
           ))}
         </select>
         <p className='text-xs italic line-clamp-1'>
-            <code>%theme</code>
-          </p>
+          <code>%theme</code>
+        </p>
       </div>
       <button
         className='col-span-2 flex-1 flex items-center justify-center text-white px-2 py-3 rounded w-full bg-darkgray disabled:opacity-50 font-sans'
-        disabled={!fileName}
+        disabled={!fileName || disabled}
         onClick={handleSaveDraft}
       >
         <div className='w-5 mr-2'>
