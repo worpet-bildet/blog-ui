@@ -9,6 +9,11 @@ import {
 import { api } from '../state/api'
 import { useStore } from '../state/base'
 import { Publish } from './Modal'
+import {
+  ChevronLeftIcon,
+  ChevronRightIcon,
+  InboxArrowDownIcon,
+} from '@heroicons/react/24/outline'
 
 type BottomBarProps = {
   showPreview: boolean
@@ -20,11 +25,11 @@ type BottomBarProps = {
 }
 
 export default function BottomBar({
+  fileName,
+  disabled,
   showPreview,
   setShowPreview,
-  fileName,
   setFileName,
-  disabled,
   setDisabled,
 }: BottomBarProps) {
   const {
@@ -48,6 +53,31 @@ export default function BottomBar({
   useEffect(() => {
     setFileName('/' + document.location.pathname.split('/').slice(4).join('/')) // TODO ugly
   }, [document.location.pathname])
+
+  useEffect(() => {
+    if (fileName.charAt(fileName.length - 1) === '/') {
+      setDisabled(true)
+      setFileNameError(`cannot end in a slash`)
+    } else if (fileName.charAt(0) !== '/') {
+      setDisabled(true)
+      setFileNameError(`must start with a slash`)
+    } else if (allBindings[fileName]) {
+      const inUse = allBindings[fileName]
+      if (inUse === 'app: %blog') {
+        setDisabled(false)
+        setFileNameError(`replace ${fileName}`)
+      } else {
+        setDisabled(true)
+        setFileNameError(`${fileName} is in use by ${inUse}`)
+      }
+    } else if (drafts.includes(fileName)) {
+      setDisabled(false)
+      setFileNameError(`replace ${fileName}`)
+    } else {
+      setDisabled(false)
+      setFileNameError('')
+    }
+  }, [fileName, pages])
 
   useEffect(() => {
     if (themes.length > 0 && activeTheme === '') setActiveTheme(themes[0])

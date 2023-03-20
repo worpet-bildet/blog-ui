@@ -22,7 +22,7 @@ export default function Share({ setShowModal, fileName }: PublishModalProps) {
       <form
         method='post'
         action={`${window.location.origin}/rumors`}
-        className='mb-4 w-full'
+        className='w-full'
       >
         <input
           type='text'
@@ -34,6 +34,12 @@ export default function Share({ setShowModal, fileName }: PublishModalProps) {
         />
         <div className='flex text-xs gap-x-2'>
           <button
+            className='flex-1 bg-blue-500 hover:bg-blue-700 text-white p-2 rounded w-full'
+            type='submit'
+          >
+            <code>%send</code>
+          </button>
+          <button
             className='flex-1 bg-red-500 hover:bg-red-700 text-white p-2 rounded w-full'
             onClick={(e) => {
               e.preventDefault()
@@ -41,12 +47,6 @@ export default function Share({ setShowModal, fileName }: PublishModalProps) {
             }}
           >
             <code>%close</code>
-          </button>
-          <button
-            className='flex-1 bg-blue-500 hover:bg-blue-700 text-white p-2 rounded w-full'
-            type='submit'
-          >
-            <code>%send</code>
           </button>
         </div>
       </form>
