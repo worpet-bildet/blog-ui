@@ -3,8 +3,6 @@ import { marked } from 'marked'
 import {
   ArrowsPointingInIcon,
   ArrowsPointingOutIcon,
-  MagnifyingGlassIcon,
-  XMarkIcon,
 } from '@heroicons/react/24/outline'
 import { api } from '../state/api'
 import { useStore } from '../state/base'
@@ -13,6 +11,7 @@ import {
   ChevronLeftIcon,
   ChevronRightIcon,
   InboxArrowDownIcon,
+  RssIcon
 } from '@heroicons/react/24/outline'
 
 type BottomBarProps = {
@@ -144,8 +143,8 @@ export default function BottomBar({
   )
 
   return (
-    <div className='w-full h-full grid gap-x-4 grid-cols-12 items-start h-10 pl-4'>
-      <div className='col-span-3'>
+    <div className='w-full h-full grid gap-x-4 grid-cols-12 items-start'>
+      <div className='col-span-4'>
         <code>
           <input
             className='w-full shadow appearance-none border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'
@@ -172,13 +171,18 @@ export default function BottomBar({
             </option>
           ))}
         </select>
+        <p className='text-xs italic line-clamp-1'>
+            <code>%theme</code>
+          </p>
       </div>
-      <div className='col-span-1'></div>
       <button
         className='col-span-2 flex-1 flex items-center justify-center text-white px-2 py-3 rounded w-full bg-darkgray disabled:opacity-50 font-sans'
         disabled={!fileName}
         onClick={handleSaveDraft}
       >
+        <div className='w-5 mr-2'>
+          <InboxArrowDownIcon />
+        </div>
         Save Draft
       </button>
       <button
@@ -186,11 +190,14 @@ export default function BottomBar({
         disabled={!fileName || disabled}
         onClick={handlePublish}
       >
+        <div className='w-5 mr-2'>
+          <RssIcon />
+        </div>
         Publish
       </button>
       <div className='col-span-1 flex flex-row h-full items-center justify-center'>
         <button
-          className='flex-1 flex items-start justify-start rounded w-full h-full text-blue-500 hover:text-blue-700'
+          className='flex-1 flex items-start justify-center rounded w-full h-full text-blue-500 hover:text-blue-700'
           onClick={() => setIsFocusMode(!isFocusMode)}
         >
           <div className='text-left flex items-center'>
@@ -204,12 +211,12 @@ export default function BottomBar({
           </div>
         </button>
         <button
-          className='flex-1 flex items-start justify-start rounded w-full h-full text-blue-500 hover:text-blue-700'
+          className='flex-1 flex items-start justify-center rounded w-full h-full text-blue-500 hover:text-blue-700'
           onClick={() => setShowPreview(!showPreview)}
         >
           <div className='text-left flex items-center'>
             <div className='py-3 w-5 mr-2'>
-              {showPreview ? <XMarkIcon /> : <MagnifyingGlassIcon />}
+              {showPreview ? <ChevronRightIcon /> : <ChevronLeftIcon />}
             </div>
           </div>
         </button>
