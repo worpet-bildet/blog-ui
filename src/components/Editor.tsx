@@ -34,7 +34,7 @@ export default function Editor() {
           className='col-span-1 w-full h-full row-span-10 rounded-2xl'
         />
       )}
-      <div className='col-span-2 pt-2'>
+      <div className='col-span-2 pt-2 z-10 relative'>
         <BottomBar
           showPreview={showPreview}
           setShowPreview={setShowPreview}
