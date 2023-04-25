@@ -49,9 +49,7 @@ export default function Theme() {
       style={{ gridTemplateRows: 'auto 50px' }}
     >
       <div className='col-span-2'>
-        <h1 className='text-3xl'>
-          Theme Editor
-        </h1>
+        <h1 className='text-3xl'>Theme Editor</h1>
         <p className='text-gray-700'>put your css below to add a theme</p>
         <div className='drop-shadow-2xl pt-2' style={{ height: '90%' }}>
           <CodeEditor
@@ -69,7 +67,7 @@ export default function Theme() {
       <div className='flex gap-x-4 col-span-2'>
         <input
           className='flex-1 shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'
-          value={theme}
+          value={name}
           onChange={(e) => setName(e.target.value)}
           placeholder='theme-name'
         />
