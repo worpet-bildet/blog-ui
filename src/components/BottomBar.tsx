@@ -11,7 +11,7 @@ import {
   ChevronLeftIcon,
   ChevronRightIcon,
   InboxArrowDownIcon,
-  RssIcon
+  RssIcon,
 } from '@heroicons/react/24/outline'
 
 type BottomBarProps = {
