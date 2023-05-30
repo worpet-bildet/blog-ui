@@ -6,6 +6,7 @@ import {
   ChevronDownIcon,
   ChevronUpIcon,
   PlusCircleIcon,
+  PencilIcon,
   RssIcon,
 } from '@heroicons/react/24/outline'
 import { useStore } from '../state/base'
@@ -247,13 +248,15 @@ export default function SideBar() {
       {uri && (
         <div className='flex flex-col gap-2 text-xs pb-6'>
           <div>Your blog is being published to</div>
-          <div>{uri}</div>
-          <p
-            className='underline cursor-pointer'
-            onClick={() => setShowConfirmUriModal(true)}
-          >
-            Change
-          </p>
+          <div className='flex justify-between items-center'>
+            <div className='truncate mr-1'>{uri}</div>
+            <div className='w-4 mr-1 hover:text-blue-500'>
+              <PencilIcon
+                className='cursor-pointer'
+                onClick={() => setShowConfirmUriModal(true)}
+              />
+            </div>
+          </div>
         </div>
       )}
       <ul className='pb-6'>
