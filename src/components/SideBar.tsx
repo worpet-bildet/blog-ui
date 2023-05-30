@@ -177,7 +177,7 @@ export default function SideBar() {
                 (linkbase === '/published' ? (
                   <>
                     <div
-                      className='w-4 cursor-pointer rounded-sm hover:text-red-500'
+                      className='w-4 cursor-pointer rounded-sm hover:text-blue-500'
                       onClick={() => {
                         window.open(item.path, '_blank')
                       }}
@@ -185,7 +185,7 @@ export default function SideBar() {
                       <RssIcon />
                     </div>
                     <div
-                      className='w-4 cursor-pointer rounded-sm hover:text-blue-500'
+                      className='w-4 cursor-pointer rounded-sm hover:text-red-500'
                       onClick={() => {
                         showModal(linkbase)
                         setFileName(item.path)
