@@ -22,7 +22,7 @@ export default function SideBar() {
   const drafts = useStore((state) => state.drafts)
   const pages = useStore((state) => state.pages)
   const themes = useStore((state) => state.themes)
-  const { getAll, saveDraft, saveTheme } = useStore()
+  const { getAll, saveDraft, saveTheme, uri } = useStore()
   const navigate = useNavigate()
   const [fileName, setFileName] = useState('')
   const [showDeleteDraftModal, setShowDeleteDraftModal] = useState(false)
@@ -236,6 +236,10 @@ export default function SideBar() {
         <Link to='/'>
           <Logo />
         </Link>
+      </div>
+      <div className='flex flex-col gap-2 text-xs pb-6'>
+        <div>Your blog is being published to</div>
+        <div>{uri}</div>
       </div>
       <ul className='pb-6'>
         <label className='block font-bold mb-3 font-sans font-extrabold'>
