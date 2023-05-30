@@ -33,7 +33,7 @@ export const useStore = create<State>()((set) => ({
   pages: [],
   drafts: [],
   themes: [],
-  uri: 'DEFAULT',
+  uri: '',
   setMarkdown: (s) => set(() => ({ markdown: s })),
   setPreviewCss: (s) => set(() => ({ previewCss: s })),
   setActiveTheme: (s) => (set(() => ({ activeTheme: s}))),

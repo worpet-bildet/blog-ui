@@ -11,14 +11,24 @@ export default function ConfirmUri({
   setShowModal,
   onConfirm,
 }: ConfirmUriModalProps) {
-  const [newUri, setNewUri] = useState(uri)
+  const [newUri, setNewUri] = useState(uri || window.location.origin)
   return (
     <Modal>
       <div className='flex flex-col gap-2'>
-        <h4 className='text-md font-bold'>Published!</h4>
+        {(uri && (
+          <p>
+            Your blog is published to {uri} - if that's not right, you can
+            change it here.
+          </p>
+        )) || (
+          <p>
+            You have not yet specified the URL of your blog, please confirm the
+            below location.
+          </p>
+        )}
         <p>
-          Your blog has been published to {uri} - if that's not right, you can
-          change it here.
+          Subscribers to your blog require this in order to create the correct
+          links.
         </p>
         <input
           type='text'

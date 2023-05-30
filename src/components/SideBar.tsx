@@ -10,7 +10,7 @@ import {
 } from '@heroicons/react/24/outline'
 import { useStore } from '../state/base'
 import Logo from './Logo'
-import { ConfirmDeleteDraft, ConfirmUnpublish } from './Modal'
+import { ConfirmDeleteDraft, ConfirmUnpublish, ConfirmUri } from './Modal'
 import { api } from '../state/api'
 
 type SidebarEntry = {
@@ -22,11 +22,12 @@ export default function SideBar() {
   const drafts = useStore((state) => state.drafts)
   const pages = useStore((state) => state.pages)
   const themes = useStore((state) => state.themes)
-  const { getAll, saveDraft, saveTheme, uri } = useStore()
+  const { getAll, saveDraft, saveTheme, uri, saveUri } = useStore()
   const navigate = useNavigate()
   const [fileName, setFileName] = useState('')
   const [showDeleteDraftModal, setShowDeleteDraftModal] = useState(false)
   const [showUnpublishModal, setShowUnpublishModal] = useState(false)
+  const [showConfirmUriModal, setShowConfirmUriModal] = useState(false)
 
   const [nestedDrafts, setNestedDrafts] = useState<SidebarEntry[]>([])
   const [nestedPages, setNestedPages] = useState<SidebarEntry[]>([])
@@ -111,6 +112,11 @@ export default function SideBar() {
     })
     setShowUnpublishModal(false)
     getAll()
+  }, [])
+
+  const handleConfirmUri = useCallback(async (newUri: string) => {
+    await saveUri(newUri)
+    setShowConfirmUriModal(false)
   }, [])
 
   const showModal = (linkbase: string) => {
@@ -237,10 +243,18 @@ export default function SideBar() {
           <Logo />
         </Link>
       </div>
-      <div className='flex flex-col gap-2 text-xs pb-6'>
-        <div>Your blog is being published to</div>
-        <div>{uri}</div>
-      </div>
+      {uri && (
+        <div className='flex flex-col gap-2 text-xs pb-6'>
+          <div>Your blog is being published to</div>
+          <div>{uri}</div>
+          <p
+            className='underline cursor-pointer'
+            onClick={() => setShowConfirmUriModal(true)}
+          >
+            Change
+          </p>
+        </div>
+      )}
       <ul className='pb-6'>
         <label className='block font-bold mb-3 font-sans font-extrabold'>
           Published
@@ -307,6 +321,13 @@ export default function SideBar() {
           fileName={fileName}
           setShowModal={setShowUnpublishModal}
           onConfirm={() => handleUnpublish(fileName)}
+        />
+      )}
+      {showConfirmUriModal && (
+        <ConfirmUri
+          uri={uri}
+          setShowModal={setShowConfirmUriModal}
+          onConfirm={(newUri: string) => handleConfirmUri(newUri)}
         />
       )}
     </div>
