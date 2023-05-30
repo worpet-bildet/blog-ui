@@ -117,6 +117,7 @@ export default function SideBar() {
   const handleConfirmUri = useCallback(async (newUri: string) => {
     await saveUri(newUri)
     setShowConfirmUriModal(false)
+    getAll()
   }, [])
 
   const showModal = (linkbase: string) => {
