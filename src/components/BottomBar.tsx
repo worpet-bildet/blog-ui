@@ -6,12 +6,13 @@ import {
 } from '@heroicons/react/24/outline'
 import { api } from '../state/api'
 import { useStore } from '../state/base'
-import { Publish } from './Modal'
+import { ConfirmUri } from './Modal'
+
 import {
   ChevronLeftIcon,
   ChevronRightIcon,
   InboxArrowDownIcon,
-  RssIcon
+  RssIcon,
 } from '@heroicons/react/24/outline'
 
 type BottomBarProps = {
@@ -36,6 +37,8 @@ export default function BottomBar({
     activeTheme,
     themes,
     isFocusMode,
+    uri,
+    saveUri,
     getAll,
     setPreviewCss,
     setActiveTheme,
@@ -45,9 +48,9 @@ export default function BottomBar({
     allBindings,
     drafts,
   } = useStore()
+  const [showConfirmUriModal, setShowConfirmUriModal] = useState(false)
 
   const [fileNameError, setFileNameError] = useState('')
-  const [showPublishModal, setShowPublishModal] = useState(false)
 
   useEffect(() => {
     setFileName('/' + document.location.pathname.split('/').slice(4).join('/')) // TODO ugly
@@ -121,26 +124,22 @@ export default function BottomBar({
     [fileName, markdown]
   )
 
-  const handlePublish = useCallback(
-    async (e: React.SyntheticEvent) => {
-      e.preventDefault()
-      await api.poke({
-        app: 'blog',
-        mark: 'blog-action',
-        json: {
-          publish: {
-            path: fileName,
-            html: marked.parse(markdown),
-            md: markdown,
-            theme: activeTheme,
-          },
+  const handlePublish = useCallback(async () => {
+    await api.poke({
+      app: 'blog',
+      mark: 'blog-action',
+      json: {
+        publish: {
+          path: fileName,
+          html: marked.parse(markdown),
+          md: markdown,
+          theme: activeTheme,
         },
-      })
-      getAll()
-      setShowPublishModal(true)
-    },
-    [fileName, markdown, activeTheme]
-  )
+      },
+    })
+    getAll()
+    setShowConfirmUriModal(true)
+  }, [fileName, markdown, activeTheme])
 
   return (
     <div className='w-full h-full grid gap-x-4 grid-cols-12 items-start'>
@@ -222,8 +221,15 @@ export default function BottomBar({
         </button>
       </div>
 
-      {showPublishModal && (
-        <Publish fileName={fileName} setShowModal={setShowPublishModal} />
+      {showConfirmUriModal && (
+        <ConfirmUri
+          uri={uri}
+          setShowModal={setShowConfirmUriModal}
+          onConfirm={async (_uri: string) => {
+            await saveUri(_uri)
+            getAll()
+          }}
+        />
       )}
     </div>
   )

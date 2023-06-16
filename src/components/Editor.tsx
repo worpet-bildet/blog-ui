@@ -1,6 +1,6 @@
 import MDEditor from '@uiw/react-md-editor'
 import { marked } from 'marked'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import BottomBar from './BottomBar'
 import { useStore } from '../state/base'
 

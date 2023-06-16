@@ -6,20 +6,22 @@ export interface State {
   markdown:       string
   previewCss:     string
   activeTheme:    string
-  isFocusMode:      boolean,
+  isFocusMode:    boolean,
   allBindings:    {[key: string]: string}
   pages:          string[]
   drafts:         string[]
   themes:         string[]
+  uri:            string,
   setMarkdown:    (s: string) => void
   setPreviewCss:  (s: string) => void
   setActiveTheme: (s: string) => void
-  setIsFocusMode:   (b: boolean) => void
+  setIsFocusMode: (b: boolean) => void
   getAll:         () => Promise<void>
   getDraft:       (s: string) => Promise<void>
   getPage:        (s: string) => Promise<void>
   saveDraft:      (s: string, t: string) => Promise<void>
   saveTheme:      (s: string, t: string) => Promise<void>
+  saveUri:        (s: string) => Promise<void>
 }
 
 export const useStore = create<State>()((set) => ({
@@ -31,6 +33,7 @@ export const useStore = create<State>()((set) => ({
   pages: [],
   drafts: [],
   themes: [],
+  uri: '',
   setMarkdown: (s) => set(() => ({ markdown: s })),
   setPreviewCss: (s) => set(() => ({ previewCss: s })),
   setActiveTheme: (s) => (set(() => ({ activeTheme: s}))),
@@ -40,7 +43,8 @@ export const useStore = create<State>()((set) => ({
     let drafts      = await api.scry({ app: 'blog', path: '/drafts' })
     let themes      = await api.scry({ app: 'blog', path: '/themes'})
     let allBindings = await api.scry({ app: 'blog', path: '/all-bindings'})
-    set({ drafts, pages, allBindings, themes })
+    let uri         = await api.scry({ app: 'blog', path: '/uri'})
+    set({ drafts, pages, allBindings, themes, uri })
   },
   getDraft: async (s) => { // TODO remove or integrate
     let draft = await api.scry({ app : 'blog', path: `/draft${s}`})
@@ -72,6 +76,15 @@ export const useStore = create<State>()((set) => ({
           css: css,
         },
       },
+    })
+  },
+  saveUri: async (uri: string) => {
+    await api.poke({
+      app: 'blog',
+      mark: 'blog-action',
+      json: {
+        'update-uri': { uri }
+      }
     })
   }
 }))
