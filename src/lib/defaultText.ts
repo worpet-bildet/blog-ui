@@ -1,5 +1,4 @@
-export const defaultText =
-`# Welcome to \`%blog\`
+export const defaultText = `# Welcome to \`%blog\`
 
 ![sigils](https://media.urbit.org/site/understanding-urbit/urbit-id/urbit-id-sigils%402x.png)
 
@@ -10,13 +9,7 @@ To bind a post to a URL, just type in the path on the bottom right and click \`%
 
 To style your post, add style to the bottom using CSS, as you can see below.
 
-## Features Coming Soon
-- \`%uqbar\` integration for paid posts
-- \`%gallery\` views managed through \`%silo\`
-- \`%group\` posts for managing a \`%blog\`
-- \`%comment\` for comments
-
-For any feature requests, make an issue or a PR into [here](https://github.com/tadad/blog-ui/issues) for the UI repo, or [here](https://github.com/tadad/blog/issues) for the hoon code.
+For any feature requests, make an issue or a PR into [here](https://github.com/worpet-bildet/blog-ui/issues) for the UI repo, or [here](https://github.com/worpet-bildet/blog/issues) for the hoon code.
 
 Happy blogging!
 
